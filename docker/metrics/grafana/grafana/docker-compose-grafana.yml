@@ -1,0 +1,15 @@
+services:
+  grafana:
+    image: grafana/grafana:10.1.2
+    container_name: grafana
+    restart: unless-stopped
+    user: "0:0"
+    ports:
+      - "3003:3003"
+    extra_hosts:
+      - dockerhost:host-gateway
+    environment:
+      - GF_SERVER_ROOT_URL=http://127.0.0.1/
+    volumes:
+      - ../../data/grafana/data/:/var/lib/grafana
+      - ./config/grafana.ini:/etc/grafana/grafana.ini
