@@ -19,12 +19,12 @@ services:
       - --http.vhosts="*"
       - --http.addr=0.0.0.0
       - --http.port=8545
-      - --http.api=web3,debug,eth,txpool,net,engine
+      - --http.api=debug,admin,db,eth,web3,net,personal,txpool,clique
       - --ws
       - --ws.addr=0.0.0.0
       - --ws.port=8546
       - --ws.origins="*"
-      - --ws.api=debug,eth,txpool,net,engine
+      - --ws.api=debug,admin,db,eth,web3,net,personal,txpool
       - --syncmode=full
       - --gcmode=archive
       - --nodiscover
@@ -36,6 +36,15 @@ services:
       - --authrpc.jwtsecret=/credentials/jwt.txt
       - --rollup.disabletxpoolgossip=true
       - --rollup.sequencerhttp=http://192.168.10.11:8545
+      - --verbosity=5
+      - --metrics
+      - --metrics.addr=192.168.10.31
+      - --metrics.expensive
+      - --metrics.influxdb
+      - --metrics.influxdb.endpoint=http://dockerhost:8086
+      - --metrics.influxdb.username=geth
+      - --metrics.influxdb.password=geth
+      - --metrics.influxdb.database=geth
     networks:
       op-local:
         ipv4_address: 192.168.10.31
@@ -74,8 +83,122 @@ services:
       op-local:
         ipv4_address: 192.168.10.32
 
+  #Blockscout begin
+  redis_db:
+    extends:
+      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
+      service: redis_db
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.35
+
+  postgres_db:
+    extends:
+      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
+      service: postgres_db
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.34
+
+  blockscout:
+    extends:
+      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
+      service: blockscout
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.33
+
+  smart-contract-verifier:
+    extends:
+      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
+      service: smart-contract-verifier
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.37
+
+  visualizer:
+    extends:
+      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
+      service: visualizer
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.38
+
+  sig-provider:
+    extends:
+      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
+      service: sig-provider
+
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.36
+  #blockscout end
+
+  #grafana begin
+  grafana:
+    extends:
+      file: ../metrics/grafana/grafana/docker-compose-grafana.yml
+      service: grafana
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.39
+  #grafana end
+
+  #influx begin
+  influxdb:
+    extends:
+      file: ../metrics/grafana/influx/docker-compose-influx.yml
+      service: influxdb
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.40
+
+  #  telegraf:
+  #    extends:
+  #      file: ../metrics/grafana/influx/docker-compose-influx.yml
+  #      service: telegraf
+  #    networks:
+  #      op-local:
+  #        ipv4_address: 192.168.10.41
+  #
+  #  kapacitor:
+  #    extends:
+  #      file: ../metrics/grafana/influx/docker-compose-influx.yml
+  #      service: kapacitor
+  #    networks:
+  #      op-local:
+  #        ipv4_address: 192.168.10.42
+
+  chronograf:
+    extends:
+      file: ../metrics/grafana/influx/docker-compose-influx.yml
+      service: chronograf
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.43
+  #influx end
+
+  #prometheus begin
+  prometheus:
+    extends:
+      file: ../metrics/grafana/prometheus/docker-compose-prometheus.yml
+      service: prometheus
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.44
+#prometheus end
+
 networks:
   op-local:
     name: op-local
     external: true
-
+    driver: bridge
+#    driver_opts:
+#      com.docker.network.driver.mtu: 5000
+volumes:
+  grafana-data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '../metrics/data/grafana/data'
