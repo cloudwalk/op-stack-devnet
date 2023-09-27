@@ -15,3 +15,4 @@ For alternative versions, please refer to the other branches and tags available 
 Available options:
 1. [Running a single-node network without Docker](./single-node-no-docker.md): This option provides a fully autonomous startup.
 2. [Running a three-node network using Docker](./three-node-using-docker.md): This option requires specific files as outlined in option 1.
+3. [Configure metrics services using Docker](./architecture-metrics.md): This option provides desctiption for installation and configuration metrics services (grafana, blockscout, prometheus).
