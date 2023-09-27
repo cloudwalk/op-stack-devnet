@@ -106,6 +106,7 @@ services:
       - --l1-eth-rpc=$CW_OP_L1_RPC_URL
       - --private-key=$CW_OP_BATCHER_KEY
       - --max-channel-duration=15
+      - --metrics.enabled
     networks:
       op-local:
         ipv4_address: 192.168.10.13
@@ -129,6 +130,7 @@ services:
       - --l2oo-address=$CW_OP_L2OOP_ADDRESS
       - --private-key=$CW_OP_PROPOSER_KEY
       - --l1-eth-rpc=$CW_OP_L1_RPC_URL
+      - --metrics.enabled
     networks:
       op-local:
         ipv4_address: 192.168.10.14
