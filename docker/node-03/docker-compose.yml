@@ -79,6 +79,7 @@ services:
       - --p2p.discovery.path=/p2p/opnode_discovery_db
       - --l1=$CW_OP_L1_RPC_URL
       - --l1.rpckind=$CW_OP_L1_RPC_KIND
+      - --metrics.enabled
     networks:
       op-local:
         ipv4_address: 192.168.10.32
@@ -128,7 +129,6 @@ services:
     extends:
       file: ../metrics/blockscout/docker-compose-no-build-geth.yml
       service: sig-provider
-
     networks:
       op-local:
         ipv4_address: 192.168.10.36
@@ -153,21 +153,21 @@ services:
       op-local:
         ipv4_address: 192.168.10.40
 
-  #  telegraf:
-  #    extends:
-  #      file: ../metrics/grafana/influx/docker-compose-influx.yml
-  #      service: telegraf
-  #    networks:
-  #      op-local:
-  #        ipv4_address: 192.168.10.41
-  #
-  #  kapacitor:
-  #    extends:
-  #      file: ../metrics/grafana/influx/docker-compose-influx.yml
-  #      service: kapacitor
-  #    networks:
-  #      op-local:
-  #        ipv4_address: 192.168.10.42
+  telegraf:
+    extends:
+      file: ../metrics/grafana/influx/docker-compose-influx.yml
+      service: telegraf
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.41
+
+  kapacitor:
+    extends:
+      file: ../metrics/grafana/influx/docker-compose-influx.yml
+      service: kapacitor
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.42
 
   chronograf:
     extends:
