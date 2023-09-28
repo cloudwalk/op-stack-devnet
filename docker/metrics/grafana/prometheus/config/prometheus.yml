@@ -2,20 +2,52 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
 
-
 #  # Load and evaluate rules in this file every 'evaluation_interval' seconds.
 #  rule_files:
 #    - 'record.geth.rules.yml'
 
 # A scrape configuration containing exactly one endpoint to scrape.
 scrape_configs:
-  - job_name: 'go-ethereum'
+  - job_name: 'op-geth'
     scrape_interval: 30s
     scrape_timeout: 30s
     metrics_path: /debug/metrics/prometheus
     static_configs:
       - targets:
           - '192.168.10.31:6060'
+        labels:
+          chain: ethereum
+    tls_config:
+      insecure_skip_verify: true
+  - job_name: 'op-node'
+    scrape_interval: 30s
+    scrape_timeout: 30s
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - '192.168.10.32:7300'
+        labels:
+          chain: ethereum
+    tls_config:
+      insecure_skip_verify: true
+  - job_name: 'op-batcher'
+    scrape_interval: 30s
+    scrape_timeout: 30s
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - '192.168.10.13:7300'
+        labels:
+          chain: ethereum
+    tls_config:
+      insecure_skip_verify: true
+  - job_name: 'op-proposer'
+    scrape_interval: 30s
+    scrape_timeout: 30s
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - '192.168.10.14:7300'
         labels:
           chain: ethereum
     tls_config:
