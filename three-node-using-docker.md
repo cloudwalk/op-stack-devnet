@@ -260,17 +260,37 @@ This instruction is actual for the following versions of OP-Stack repositories:
 
 3.  Information about getting native tokens (ETH) inside the newly created L2 network see [here](single-node-no-docker.md#9-use-the-newly-created-l2-network).
 
-## 9. Additionally - metrics
+## 10. Additional software for monitoring
 
-This docker installation includes also software for gathering and display various metrics.
+This docker installation includes also software for:
+* exploring the blockchain data (blocks, transactions, etc.);
+* gathering and display various metrics of the L2 network.
+
+### Pre-installed software
+
+* [Blockscout](https://docs.blockscout.com/) -- a block explorer preconfigured for `Geth`. It works by requesting blocks data and other information from `op-geth`.
+* [Grafana](https://grafana.com/) -- a monitoring platform to collect and output metrics data. It works with Prometheus and InfluxDB as datasources.
+* [Prometheus](https://prometheus.io/) -- a system for monitoring and collecting metrics data, output data and provide data to Grafana dashboards. It collects data from all node applications: `op-geth`, `op-node`, `op-proposer`, `op-batcher`.  
+* [InfluxDB](https://www.influxdata.com/) -- a database to collect and provide metrics data to Grafana. It is used only by `op-geth` to send the metrics directly as opposed to Prometheus, which periodically polls applications to gather the necessary metrics.
+* [Chronograf](https://www.influxdata.com/time-series-platform/chronograf/) -- a user interface for `InfluxDB`.
+* [Telegraf](https://www.influxdata.com/time-series-platform/telegraf/) -- an agent for collecting and sending all metrics. It works with `InfluxDB` and `Chronograf`.
+* [Kapacitor](https://www.influxdata.com/time-series-platform/kapacitor/) -- a data processing engine. It works with `InfluxDB` and `Chronograf`.
+
+**Note:** All metric software docker-compose configuration files are stored in folder [docker/metrics](docker/metrics).
+
+### Enable the block explorer
+
+No changes in configuration of nodes is needed. The explorer requests blocks and additional information from `op-geth` on `node3` through the JSON RPC.
 
 ### Enable metrics in docker-composer.yml
 
-Op-geth allows to collect data in `InfluxDB` and `Prometheus`.
+`op-geth` allows to collect data in `InfluxDB` and `Prometheus`.
 
-To allow collect metrics for op-geth, there were added several flags for `op-geth` in Node 3 `docker-compose.yml` file to run during start:
+To allow metrics collection for `op-geth` on `node3` the following flags were added to the appropriate `docker-compose.yml` file:
 
 ```
+  - --http.api=debug,admin,db,eth,web3,net,personal,txpool,clique
+  - --ws.api=debug,admin,db,eth,web3,net,personal,txpool
   - --metrics
   - --metrics.addr=192.168.10.31
   - --metrics.expensive
@@ -281,25 +301,11 @@ To allow collect metrics for op-geth, there were added several flags for `op-get
   - --metrics.influxdb.database=geth
 ```
 
-To allow collect metrics for op-node, op-batcher and op-proposer, there were added `metrics` flag too.
-
-For `op-node` in Node 3 and for `op-proposer` and `op-batcher` in Node 1 during start:
-
+To allow metrics collection for `op-node` on `node3` and  `op-batcher`, `op-proposer` on `node1` the following flag were added to the appropriate `docker-compose.yml` files:
 ```
 - --metrics.enabled
 ```
 
-### Pre-installed metrics software
+### Usage
 
-* [Blockscout](https://docs.blockscout.com/) - **block explorer (preconfigured for Geth)**
-* [Grafana](https://grafana.com/) - **monitoring platform to collect and output metrics data (works with Prometheus and InfluxDB as datasources)**
-* [Prometheus](https://prometheus.io/) - **system for monitoring and collecting data, output data and provide data to Grafana dashboards (collects data from all systems - op-geth, op-node, op-proposer, op-batcher)**  
-* [InfluxDB](https://www.influxdata.com/) - **database to collect data and provide data to Grafana (uses only by op-geth)**
-* [Chronograf](https://www.influxdata.com/time-series-platform/chronograf/) - **user interface for InfluxDB**
-* [Telegraf](https://www.influxdata.com/time-series-platform/telegraf/) - **agent for collecting and sending all metrics (works with InfluxDB and Chronograf)**
-* [Kapacitor](https://www.influxdata.com/time-series-platform/kapacitor/) - **data processing engine (works with InfluxDB and Chronograf)**
-
-
-**All metric software docker-compose configuration files are stored in folder `docker/metrics`**
-
-More detail information can be found on page [Architecture to collect and output metrics data](./architecture-metrics.md)
+More details about the monitoring software and additional steps for its activation can be found on page [Architecture for monitoring](./architecture-for-monitoring.md)

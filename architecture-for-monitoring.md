@@ -1,10 +1,9 @@
-# Architecture to collect and output metrics data
+# Architecture for monitoring
 
-Metrics integrated with dockers from instruction:
+This document describes the additional software to explorer the blokchain data, collect and output the L2 network metrics.
+This software is integrated with docker containers from the [Running a three-node network using Docker](./three-node-using-docker.md) instruction.
 
-* [Running a three-node network using Docker](./three-node-using-docker.md)
-
-To collect metrics here are used next metrics software (docker images):
+The list of software as docker containers:
 
 * **blockscout/blockscout:latest**
 * **prom/prometheus:latest**
@@ -14,56 +13,63 @@ To collect metrics here are used next metrics software (docker images):
 * **telegraf:alpine**
 * **kapacitor:alpine**
 
-## Extra steps
+## Extra steps for activate metrics collection
 
 ### Telegraf
 
-Before running docker, it is necessary to send docker group id (GID) to telegraf container in env variable `CW_OP_TELEGRAF_DOCKER_ID`.
+Before running docker, it is necessary to send docker group id (GID) to telegraf container in env variable `CW_OP_TELEGRAF_DOCKER_ID`:
 
-To see number of docker GID, run in terminal:
+1. Get the number of docker GID by running the following command in the terminal:
 
-```
-$(stat -c '%g' /var/run/docker.sock)
-```
+   ```
+   $(stat -c '%g' /var/run/docker.sock)
+   ```
 
-Then, set outputted number for variable `CW_OP_TELEGRAF_DOCKER_ID` in file `docker/prerequisite/envfile`
+2. Set the outputted number to variable `CW_OP_TELEGRAF_DOCKER_ID` in file `docker/prerequisite/envfile`
 
 ### InfluxDB
 
-After first run dockers with metrics software it is necessary to create database and user for `op-geth`:
+During the first run of docker with metrics software it is necessary to create database and user for `op-geth`:
 
-1) **To enter influxDB docker container, run in terminal:**
-```
-sudo docker exec -it influxdb bash
-```
+1. Run the following command in terminal to enter the `influxDB` docker container:
+   ```
+   sudo docker exec -it influxdb bash
+   ```
 
-2) **To Create Database and Geth User, run in docker terminal after previous step:**
+2. Create a database and a user for `op-geth`:
 
-```
-influx -execute "CREATE DATABASE geth"
+   ```
+   influx -execute "CREATE DATABASE geth"
+   
+   influx -database 'geth' -execute "CREATE USER geth WITH PASSWORD 'geth' WITH ALL PRIVILEGES"
+   ```
 
-influx -database 'geth' -execute "CREATE USER geth WITH PASSWORD 'geth' WITH ALL PRIVILEGES"
-```
+## Monitoring Urls
 
-## Metrics Urls
+
+## Explorer services
+
+| URL | Software Name | Datasource node |
+|---|---|---|
+|http://192.168.10.33:4000/| Blockscout | node3 |
+
 
 ### Metric services:
 
 | URL | Software Name |
-|--------------|---------------|
-|http://192.168.10.33:4000/| Blockscout    |
+|---|---|
 |http://192.168.10.43:8888/| Chronograf    |
 |http://192.168.10.44:9090/| Prometheus    |
 |http://192.168.10.39:3003| Grafana       |
 
 ### Prometheus Metrics Urls:
 
-| URL | Service Name |
-|--------------|--------------|
-|http://192.168.10.31:6060/debug/metrics/prometheus| op-geth      |
-|http://192.168.10.32:7300/metrics| op-node      |
-|http://192.168.10.14:7300/metrics| op-proposer  |
-|http://192.168.10.13:7300/metrics| op-batcher   |
+| URL | Application Name | Datasource node |
+|---|---|---|
+|http://192.168.10.31:6060/debug/metrics/prometheus| op-geth | node3 |
+|http://192.168.10.32:7300/metrics| op-node      | node3 |
+|http://192.168.10.14:7300/metrics| op-proposer  | node1 |
+|http://192.168.10.13:7300/metrics| op-batcher   | node1 |
 
 
 ## Grafana Configuration
