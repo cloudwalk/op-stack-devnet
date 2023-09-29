@@ -11,6 +11,8 @@ services:
     volumes:
       - ./datadir:/datadir
       - ./credentials:/credentials
+    links:
+      - influxdb
     command:
       - geth
       - --datadir=/datadir
@@ -35,6 +37,14 @@ services:
       - --authrpc.port=8551
       - --authrpc.jwtsecret=/credentials/jwt.txt
       - --rollup.disabletxpoolgossip=true
+      - --metrics
+      - --metrics.addr=192.168.10.31
+      - --metrics.expensive
+      - --metrics.influxdb
+      - --metrics.influxdb.endpoint=http://192.168.10.15:8086
+      - --metrics.influxdb.username=geth
+      - --metrics.influxdb.password=geth
+      - --metrics.influxdb.database=geth
     networks:
       op-local:
         ipv4_address: 192.168.10.11
@@ -134,6 +144,40 @@ services:
     networks:
       op-local:
         ipv4_address: 192.168.10.14
+
+  #influx begin
+  influxdb:
+    extends:
+      file: ../metrics/grafana/influx/docker-compose-influx.yml
+      service: influxdb
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.15
+
+  telegraf:
+    extends:
+      file: ../metrics/grafana/influx/docker-compose-influx.yml
+      service: telegraf
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.16
+
+  kapacitor:
+    extends:
+      file: ../metrics/grafana/influx/docker-compose-influx.yml
+      service: kapacitor
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.17
+
+  chronograf:
+    extends:
+      file: ../metrics/grafana/influx/docker-compose-influx.yml
+      service: chronograf
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.18
+  #influx end
 
 networks:
   op-local:

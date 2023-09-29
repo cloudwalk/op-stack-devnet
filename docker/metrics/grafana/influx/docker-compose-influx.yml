@@ -46,7 +46,7 @@ services:
       - dockerhost:host-gateway
     volumes:
       # Mount for kapacitor data directory
-      - ../../data/kapacitor/data/:/var/lib/kapacitor
+      - ../../data/kapacitor/data:/var/lib/kapacitor
       # Mount for kapacitor configuration
       - ./kapacitor/config/:/etc/kapacitor/
     links:
@@ -65,7 +65,7 @@ services:
       RESOURCES_PATH: "/usr/share/chronograf/resources"
     volumes:
       # Mount for chronograf database
-      - ../../data/chronograf/data/:/var/lib/chronograf/
+      - ../../data/chronograf/data:/var/lib/chronograf/
       - ./chronograf/resources/config.src:/usr/share/chronograf/resources/config.src
       - ./chronograf/resources/config-kapa.kap:/usr/share/chronograf/resources/sandbox-kapa.kap
     links:
