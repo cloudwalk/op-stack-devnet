@@ -73,12 +73,12 @@ During the first run of docker with metrics software it is necessary to create d
 
 ### Metrics Datasources
 
-Op-geth can provide two type of metrics sources:
-* op-geth sends metrics directly to `InfluxDB` - in this case, op-geth is responsible for saving data in influxDB
-* op-geth enables and provides http server with metrics for `prometheus` - in this case, prometheus is responsible for checking op-geth metric URL and saving data. Therefore, additional requests from prometheus can create extra load on the server.
+`Op-geth` can provide two type of metrics sources:
+* `op-geth` sends metrics directly to `influxDB`. In this case `op-geth` is responsible for saving data in `influxDB`.
+* `op-geth` enables and provides http server with metrics for `prometheus`. In this case prometheus is responsible for checking the `op-geth` metrics URL and saving data. Therefore, additional requests from `prometheus` can create extra load on the server.
 
-Because sequencer is enabled on node1, to have more correct metrics data `influxDB` was enabled on `node1`.
-To avoid extra load on sequencer node, prometheus service and op-geth metrics server were enable on `node3`.
+Because sequencer is enabled on `node1`, to have more correct metrics data `influxDB` was enabled on `node1`.
+To avoid extra load on sequencer node, `prometheus` service and the `op-geth` metrics server were enable on `node3`.
 
 ## Grafana Configuration
 
