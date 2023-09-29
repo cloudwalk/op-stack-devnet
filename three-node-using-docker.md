@@ -295,7 +295,7 @@ To allow metrics collection for `op-geth` on `node3` the following flags were ad
   - --metrics.addr=192.168.10.31
   - --metrics.expensive
   - --metrics.influxdb
-  - --metrics.influxdb.endpoint=http://dockerhost:8086
+  - --metrics.influxdb.endpoint=http://192.168.10.15:8086
   - --metrics.influxdb.username=geth
   - --metrics.influxdb.password=geth
   - --metrics.influxdb.database=geth
