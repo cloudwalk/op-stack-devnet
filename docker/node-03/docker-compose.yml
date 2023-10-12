@@ -86,31 +86,40 @@ services:
       service: redis_db
     networks:
       op-local:
-        ipv4_address: 192.168.10.35
+        ipv4_address: 192.168.10.33
 
-  postgres_db:
+  postgres-db-init:
     extends:
       file: ../metrics/blockscout/docker-compose-no-build-geth.yml
-      service: postgres_db
+      service: postgres-db-init
+
+  postgres-db:
+    extends:
+      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
+      service: postgres-db
     networks:
       op-local:
         ipv4_address: 192.168.10.34
 
-  blockscout:
+  backend:
     extends:
       file: ../metrics/blockscout/docker-compose-no-build-geth.yml
-      service: blockscout
+      service: backend
+    ports:
+      - 4000:4000
     networks:
       op-local:
-        ipv4_address: 192.168.10.33
+        ipv4_address: 192.168.10.35
 
-  smart-contract-verifier:
+  frontend:
     extends:
       file: ../metrics/blockscout/docker-compose-no-build-geth.yml
-      service: smart-contract-verifier
+      service: frontend
+    ports:
+      - 3008:3000
     networks:
       op-local:
-        ipv4_address: 192.168.10.37
+        ipv4_address: 192.168.10.36
 
   visualizer:
     extends:
@@ -126,8 +135,45 @@ services:
       service: sig-provider
     networks:
       op-local:
-        ipv4_address: 192.168.10.36
-  #blockscout end
+        ipv4_address: 192.168.10.39
+
+  stats-db-init:
+    extends:
+      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
+      service: stats-db-init
+
+  stats-db:
+    depends_on:
+      - backend
+    extends:
+      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
+      service: stats-db
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.41
+
+  stats:
+    depends_on:
+      - stats-db
+    extends:
+      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
+      service: stats
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.42
+
+  proxy:
+    depends_on:
+      - backend
+      - frontend
+      - stats
+    extends:
+      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
+      service: proxy
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.43
+#  blockscout end
 
   #grafana begin
   grafana:
@@ -136,7 +182,7 @@ services:
       service: grafana
     networks:
       op-local:
-        ipv4_address: 192.168.10.39
+        ipv4_address: 192.168.10.44
   #grafana end
 
   #prometheus begin
@@ -146,7 +192,7 @@ services:
       service: prometheus
     networks:
       op-local:
-        ipv4_address: 192.168.10.44
+        ipv4_address: 192.168.10.45
 #prometheus end
 
 networks:
