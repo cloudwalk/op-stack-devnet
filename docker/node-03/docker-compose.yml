@@ -106,7 +106,7 @@ services:
       file: ../metrics/blockscout/docker-compose-no-build-geth.yml
       service: backend
     ports:
-      - 4000:4000
+      - 4001:4000
     networks:
       op-local:
         ipv4_address: 192.168.10.35
@@ -170,6 +170,10 @@ services:
     extends:
       file: ../metrics/blockscout/docker-compose-no-build-geth.yml
       service: proxy
+    ports:
+      - 4000:80
+      - 8080:8080
+      - 8081:8081
     networks:
       op-local:
         ipv4_address: 192.168.10.43
