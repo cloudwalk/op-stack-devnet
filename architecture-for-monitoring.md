@@ -49,9 +49,10 @@ During the first run of docker with metrics software it is necessary to create d
 
 ### Explorer services
 
-| URL | Software Name | Datasource node |
-|---|---|---|
-|http://192.168.10.33:4000/| Blockscout | node3 |
+| URL                        | Software Name       | Datasource node |
+|----------------------------|---------------------|---|
+| http://192.168.10.35:4000/ | Blockscout (old ui) | node3 |
+| http://192.168.10.36:3000/ | Blockscout (new ui) | node3 |
 
 
 ### Metric services:
@@ -59,8 +60,8 @@ During the first run of docker with metrics software it is necessary to create d
 | URL                        | Software Name |
 |----------------------------|---------------|
 | http://192.168.10.18:8888/ | Chronograf    |
-| http://192.168.10.44:9090/ | Prometheus    |
-| http://192.168.10.39:3003/ | Grafana       |
+| http://192.168.10.45:9090/ | Prometheus    |
+| http://192.168.10.44:3003/ | Grafana       |
 
 ### Prometheus Metrics Urls:
 
@@ -85,7 +86,7 @@ To avoid extra load on sequencer node, `prometheus` service and the `op-geth` me
 To configure grafana, it is necessary to define datasources and dashboards.
 
 To enter grafana:
-1. go to Grafana url - http://192.168.10.39:3003
+1. go to Grafana url - http://192.168.10.44:3003
 2. Enter with creds
    * username: `root`
    * password: `root`
@@ -109,7 +110,7 @@ To enter grafana:
 1. go to menu `'Connections' -> 'Data Sources'`
 2. click `Add new data source`
 3. Choose `Prometheus`
-4. set url http://192.168.10.44:9090
+4. set url http://192.168.10.45:9090
 6. Click `Save & test`
 
 ### Adding Grafana Dashboards
