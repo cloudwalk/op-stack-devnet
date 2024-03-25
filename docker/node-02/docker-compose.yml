@@ -7,6 +7,7 @@ services:
       - "8566:8546" # WebSocket
     extra_hosts: # for  Linux hosts since version 20.10
       - dockerhost:host-gateway
+    #    image: myimage
     image: $CW_OP_IMAGE_OP_GETH
     volumes:
       - ./datadir:/datadir
@@ -45,11 +46,10 @@ services:
       - "8567:8547" # Rollup RPC, to execute special commands of the node
     extra_hosts: # for  Linux hosts since version 20.10
       - dockerhost:host-gateway
-    image: $CW_OP_IMAGE_OP_NODE
-    links:
-      - node2-op-geth
+    image: $CW_OP_IMAGE_OP_STACK
     depends_on:
-      - node2-op-geth
+      node2-op-geth:
+        condition: service_started
     volumes:
       - ./credentials:/credentials
       - ./p2p:/p2p

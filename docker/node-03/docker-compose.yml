@@ -50,11 +50,10 @@ services:
       - "8577:8547" # Rollup RPC, to execute special commands of the node
     extra_hosts: # for  Linux hosts since version 20.10
       - dockerhost:host-gateway
-    image: $CW_OP_IMAGE_OP_NODE
-    links:
-      - node3-op-geth
+    image: $CW_OP_IMAGE_OP_STACK
     depends_on:
-      - node3-op-geth
+      node3-op-geth:
+        condition: service_started
     volumes:
       - ./credentials:/credentials
       - ./p2p:/p2p
@@ -80,50 +79,62 @@ services:
         ipv4_address: 192.168.10.32
 
   #Blockscout begin
-  redis_db:
+  redis-db:
     extends:
-      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
-      service: redis_db
+      file: ../metrics/blockscout/geth.yml
+      service: redis-db
     networks:
       op-local:
         ipv4_address: 192.168.10.33
 
-  postgres-db-init:
+  db-init:
     extends:
-      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
-      service: postgres-db-init
+      file: ../metrics/blockscout/geth.yml
+      service: db-init
 
-  postgres-db:
+  db:
     extends:
-      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
-      service: postgres-db
+      file: ../metrics/blockscout/geth.yml
+      service: db
     networks:
       op-local:
         ipv4_address: 192.168.10.34
+        aliases:
+          - database
+    depends_on:
+      db-init:
+        condition: service_started
 
   backend:
     extends:
-      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
+      file: ../metrics/blockscout/geth.yml
       service: backend
     ports:
       - 4001:4000
     networks:
       op-local:
         ipv4_address: 192.168.10.35
+    depends_on:
+      db:
+        condition: service_started
+      redis-db:
+        condition: service_started
 
   frontend:
     extends:
-      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
+      file: ../metrics/blockscout/geth.yml
       service: frontend
     ports:
       - 3008:3000
     networks:
       op-local:
         ipv4_address: 192.168.10.36
+    depends_on:
+      - backend
 
   visualizer:
     extends:
-      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
+      file: ../metrics/blockscout/geth.yml
       service: visualizer
     networks:
       op-local:
@@ -131,7 +142,7 @@ services:
 
   sig-provider:
     extends:
-      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
+      file: ../metrics/blockscout/geth.yml
       service: sig-provider
     networks:
       op-local:
@@ -139,14 +150,15 @@ services:
 
   stats-db-init:
     extends:
-      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
+      file: ../metrics/blockscout/geth.yml
       service: stats-db-init
 
   stats-db:
     depends_on:
-      - backend
+      stats-db-init:
+        condition: service_started
     extends:
-      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
+      file: ../metrics/blockscout/geth.yml
       service: stats-db
     networks:
       op-local:
@@ -155,8 +167,9 @@ services:
   stats:
     depends_on:
       - stats-db
+      - backend
     extends:
-      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
+      file: ../metrics/blockscout/geth.yml
       service: stats
     networks:
       op-local:
@@ -168,16 +181,17 @@ services:
       - frontend
       - stats
     extends:
-      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
+      file: ../metrics/blockscout/geth.yml
       service: proxy
     ports:
+      - 80:80
       - 4000:80
       - 8080:8080
-      - 8081:8081
+      - 8085:8085
     networks:
       op-local:
         ipv4_address: 192.168.10.43
-#  blockscout end
+  #  blockscout end
 
   #grafana begin
   grafana:

@@ -27,15 +27,11 @@ services:
     environment:
       HOSTNAME: "telegraf-getting-started"
     # Telegraf requires network access to InfluxDB
-    links:
-      - influxdb
     volumes:
       # Mount for telegraf configuration
       - ./telegraf/config/telegraf.conf:/etc/telegraf/telegraf.conf:ro
       # Mount for Docker API access
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    depends_on:
-      - influxdb
 
   kapacitor:
     # Full tag list: https://hub.docker.com/r/library/kapacitor/tags/
@@ -49,8 +45,6 @@ services:
       - ../../data/kapacitor/data:/var/lib/kapacitor
       # Mount for kapacitor configuration
       - ./kapacitor/config/:/etc/kapacitor/
-    links:
-      - influxdb
     ports:
       # The API for Kapacitor is served on port 9092
       - "9092:9092"
@@ -68,15 +62,7 @@ services:
       - ../../data/chronograf/data:/var/lib/chronograf/
       - ./chronograf/resources/config.src:/usr/share/chronograf/resources/config.src
       - ./chronograf/resources/config-kapa.kap:/usr/share/chronograf/resources/sandbox-kapa.kap
-    links:
-      # Chronograf requires network access to InfluxDB and Kapacitor
-      - influxdb
-      - kapacitor
     ports:
       # The WebUI for Chronograf is served on port 8888
       - "8888:8888"
-    depends_on:
-      - influxdb
-      - kapacitor
-      - telegraf
   #influx end
