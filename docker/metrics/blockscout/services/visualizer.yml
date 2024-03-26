@@ -2,10 +2,10 @@ version: '3.9'
 
 services:
   visualizer:
-    image: ghcr.io/blockscout/visualizer:${VISUALIZER_DOCKER_TAG:-latest}
+    image: ghcr.io/blockscout/visualizer:latest
     pull_policy: always
     platform: linux/amd64
-    restart: always
+    restart: on-failure:5
     container_name: 'visualizer'
     env_file:
       -  ../envs/common-visualizer.env
