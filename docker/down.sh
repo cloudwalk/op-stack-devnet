@@ -19,3 +19,9 @@ pwd
 echo "Down node 1:"
 sudo ./down.sh
 echo ""
+
+cd ../debug
+pwd
+echo "Down debug:"
+sudo ./down.sh
+echo ""
