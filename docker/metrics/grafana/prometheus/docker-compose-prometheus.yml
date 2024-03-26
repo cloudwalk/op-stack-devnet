@@ -1,7 +1,7 @@
 services:
   prometheus:
-    image: prom/prometheus:latest
-    restart: unless-stopped
+    image: $CW_PROMETHEUS_IMAGE
+    restart: on-failure:5
     container_name: prometheus
     extra_hosts: # for  Linux hosts since version 20.10
       - dockerhost:host-gateway
