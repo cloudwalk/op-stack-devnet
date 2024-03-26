@@ -14,8 +14,8 @@ This instruction is actual for the following versions of OP-Stack repositories:
 
 
 2.  This instruction was checked on:
-    * `Ubuntu  20.04 LTS`;
-    * `docker version 24.0.5, build ced0996` installed according to the [official instructions](https://docs.docker.com/desktop/install/ubuntu/);
+    * `Ubuntu 22.04.4 LTS`;
+    * `docker version 25.0.4, build ced0996` installed according to the [official instructions](https://docs.docker.com/desktop/install/ubuntu/);
     * `jq` installed as `sudo apt install -y jq`.
 
 
@@ -32,10 +32,8 @@ This instruction is actual for the following versions of OP-Stack repositories:
 
 
 4.  The following Docker images are used in this instruction:
-    * [zesgen/op-node:v1.1.3](https://hub.docker.com/layers/zesgen/op-node/v1.1.3/images/sha256-5974f4becb19ec290bd2474ad6abe12d32c80ab805ec351e5f3e34cff5c94659?context=explore);
-    * [zesgen/op-batcher:v1.1.3](https://hub.docker.com/layers/zesgen/op-batcher/v1.1.3/images/sha256-c7907e0e9d69b3ed81873bc714999109b93747caf4302710c62b4e53ed4625fc?context=explore);
-    * [zesgen/op-proposer:v1.1.3](https://hub.docker.com/layers/zesgen/op-proposer/v1.1.3/images/sha256-47fa1bc0d890a40fca60bd4bf82021a25eed284b98c558f34366e26b6114582d?context=explore).
-    * [zesgen/op-geth:v1.101106.0](https://hub.docker.com/layers/zesgen/op-geth/v1.101106.0/images/sha256-27cff53792ed8a084b2555e0465f605be62407737aaac0d36261c847d8fbbf9e?context=explore);
+    * [philpher/optimism:v1.7.2](https://hub.docker.com/layers/philpher/optimism/v1.7.2/images/sha256-976c69724115e6515dbc9921868dcaa6ededed058d8e9f62e981cb0ea8155f74?context=explore);
+    * [philpher/op-geth:v1.101308.2](https://hub.docker.com/layers/philpher/op-geth/v1.101308.2/images/sha256-e1ce183978b9be208b13f74a22f4744d3a396fd2d553e7832c1f78748f6181f1?context=repo);
 
     If you want to use your own images created from scratch follow the instruction [here](./docker-images.md).
 
@@ -103,13 +101,7 @@ This instruction is actual for the following versions of OP-Stack repositories:
     export CW_OP_L1SBP_ADDRESS="0x0165878A594ca255338adfa4d48449f69242Eb8F" # Address of the "L1StandardBridgeProxy" contract on L1
     export CW_OP_CONFIG_NAME="local-op-devnet"
     export CW_OP_L2_NETWORK_ID=3007
-    
-    # Docker images for node apps
-    export CW_OP_IMAGE_OP_NODE="zesgen/op-node:v1.1.3"
-    export CW_OP_IMAGE_OP_BATCHER="zesgen/op-batcher:v1.1.3"
-    export CW_OP_IMAGE_OP_PROPOSER="zesgen/op-proposer:v1.1.3"
-    export CW_OP_IMAGE_OP_GETH="zesgen/op-geth:v1.101106.0"
-    
+
     # P2P parameters
     export CW_OP_P2P_PRIVATE_KEY_NODE1="d01aba27820aeeb60ead4aed481eb30107426c18fd2e3133f1abac8fcd570d01"
     export CW_OP_P2P_PRIVATE_KEY_NODE2="d02aba27820aeeb60ead4aed481eb30107426c18fd2e3133f1abac8fcd570d02"
@@ -117,6 +109,10 @@ This instruction is actual for the following versions of OP-Stack repositories:
     export CW_OP_P2P_ID_NODE1="16Uiu2HAmFj2KVQEQQtgURtJKSWUmCgRsgeGs4piWP1YCREe64VLZ"
     export CW_OP_P2P_ID_NODE2="16Uiu2HAmMgZfTriZqMDDrHCUAibcaKyv8ByV8qWuSFXLpss8Rjxb"
     export CW_OP_P2P_ID_NODE3="16Uiu2HAmDKq53ypBfPNfAnwKvKwxXWjmVZ2viQahhWaaGntEqtPC"
+    
+    # Docker images for node apps
+    export CW_OP_IMAGE_OP_STACK="philpher/optimism:v1.7.2"
+    export CW_OP_IMAGE_OP_GETH="philpher/op-geth:v1.101308.2"
     ```
     
     *Tip:* If your use the L1 network running locally on your machine do not forget to replace the `CW_OP_L1_RPC_URL` env variable from `localhost` to `dockerhost`. Otherwise, Docker containers will not be able to access you machine.
@@ -233,11 +229,11 @@ This instruction is actual for the following versions of OP-Stack repositories:
 
 1.  The nodes of the network can be accessed through their Docker internal IP addresses and ports or through the forwarded ports if you configured them (see the `docker-compose.yml` files). E.g. the default RPC URL of nodes are listed in the table bellow:
 
-    | Node | Container | In-container RPC URL | Forwarded port RPC URL |
-    |---|---|---|---|
-    | 1 | node1-op-node | http://192.168.10.11:8545 | http://127.0.0.1:8545|
-    | 2 | node2-op-node | http://192.168.10.21:8545 | http://127.0.0.1:8565|
-    | 3 | node3-op-node | http://192.168.10.31:8545 | http://127.0.0.1:8575|
+    | Node | Container     | In-container RPC URL      | Forwarded port RPC URL |
+    |------|---------------|---------------------------|------------------------|
+    | 1    | node1-op-node | http://192.168.10.11:8545 | http://127.0.0.1:8545  |
+    | 2    | node2-op-node | http://192.168.10.21:8545 | http://127.0.0.1:8565  |
+    | 3    | node3-op-node | http://192.168.10.31:8545 | http://127.0.0.1:8575  |
 
 2.  You can check that blocks are being produced and can be accessed through each node with the following script:
     ```bash
