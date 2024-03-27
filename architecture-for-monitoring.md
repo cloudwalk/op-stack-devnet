@@ -5,7 +5,7 @@ This software is integrated with docker containers from the [Running a three-nod
 
 The list of software as docker containers:
 
-* **blockscout/blockscout:latest**
+* **blockscout/blockscout:6.3.0**
 * **prom/prometheus:latest**
 * **grafana/grafana:10.1.2**
 * **influxdb:1.8.10**
@@ -50,9 +50,9 @@ During the first run of docker with metrics software it is necessary to create d
 ### Explorer services
 
 | URL                        | Software Name       | Datasource node |
-|----------------------------|---------------------|---|
-| http://192.168.10.35:4000/ | Blockscout (old ui) | node3 |
-| http://192.168.10.36:3000/ | Blockscout (new ui) | node3 |
+|----------------------------|---------------------|-----------------|
+| http://192.168.10.35:4000/ | Blockscout (old ui) | node3           |
+| http://192.168.10.36:3000/ | Blockscout (new ui) | node3           |
 
 
 ### Metric services:
@@ -65,12 +65,12 @@ During the first run of docker with metrics software it is necessary to create d
 
 ### Prometheus Metrics Urls:
 
-| URL | Application Name | Datasource node |
-|---|---|---|
-|http://192.168.10.31:6060/debug/metrics/prometheus| op-geth | node3 |
-|http://192.168.10.32:7300/metrics| op-node      | node3 |
-|http://192.168.10.14:7300/metrics| op-proposer  | node1 |
-|http://192.168.10.13:7300/metrics| op-batcher   | node1 |
+| URL                                                | Application Name | Datasource node |
+|----------------------------------------------------|------------------|-----------------|
+| http://192.168.10.31:6060/debug/metrics/prometheus | op-geth          | node3           |
+| http://192.168.10.32:7300/metrics                  | op-node          | node3           |
+| http://192.168.10.14:7300/metrics                  | op-proposer      | node1           |
+| http://192.168.10.13:7300/metrics                  | op-batcher       | node1           |
 
 ### Metrics Datasources
 

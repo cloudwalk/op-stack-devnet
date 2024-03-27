@@ -1,8 +1,8 @@
 # Running a three-node L2 network based on OP-Stack using Docker
 
 This instruction is actual for the following versions of OP-Stack repositories:
-* [optimism](https://github.com/ethereum-optimism/optimism), tag: `op-node/v1.1.3`;
-* [op-geth](https://github.com/ethereum-optimism/op-geth), tag: `v1.101106.0`.
+* [optimism](https://github.com/ethereum-optimism/optimism), tag: `v1.7.2`;
+* [op-geth](https://github.com/ethereum-optimism/op-geth), tag: `v1.101308.2`.
 
 *WARING:* The instruction below is for test purposes only and it should not be used in production. At least you should protect private keys of accounts that are used to create and run the L2 network and appropriate contracts on L1 network. It is strongly recommended to use hardware keys or special services to generate and use private keys (like OpenZeppelin Defender).
 
