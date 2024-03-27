@@ -84,11 +84,12 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    git clone https://github.com/ethereum-optimism/optimism.git
    cd optimism
    git checkout v1.7.2
+   git submodule update --init --recursive
    ```
 
 
-2. Fix a bug by replacing `blockHash.String()` => `"latest"` in the file `./op-node/sources/eth_client.go`. There should
-   be 2 replacements.
+2. Fix a bug by replacing `blockHash.String()` => `"latest"` in the file `~/optimism/op-service/sources/eth_client.go`. There should
+   be 2 replacements in function `ReadStorageAt`.
 
 
 3. If you are using [nvm](https://github.com/nvm-sh/nvm) replace the NodeJs version in the `./.nvmrc` file with the
@@ -101,7 +102,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
 4. Build Optimism Monorepo:
    ```bash
    pnpm install
-   make op-node op-batcher op-proposer
+   make op-node op-batcher op-proposer cannon-prestate
    pnpm build
    ```
 
@@ -230,7 +231,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    
    # Private key to use for contract deployments, you don't need to worry about
    # this for the Getting Started guide.
-   export PRIVATE_KEY=
+   export PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 
 ```
 
@@ -428,6 +429,11 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    ```bash
    forge script scripts/Deploy.s.sol:Deploy --private-key $GS_ADMIN_PRIVATE_KEY --broadcast --rpc-url $L1_RPC_URL --slow
    ```
+   
+      
+
+!!!!make cannon-prestate!!!!
+
 
    Contract deployment can take up to 15 minutes. Please wait for all smart contracts to be fully deployed before
    proceeding to the next step.
@@ -435,7 +441,9 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    Flag `--slow` in the first command is needed to be sure that transactions are minted one by one, not in a single
    block.
 
-   >  If you see a nondescript error that includes `EvmError: Revert` and `Script failed` then you likely need to change the `IMPL_SALT` environment variable. This variable determines the addresses of various smart contracts that are deployed via CREATE2. If the same IMPL_SALT is used to deploy the same contracts twice, the second deployment will fail. You can generate a new IMPL_SALT by running `direnv allow` anywhere in the Optimism Monorepo.
+   >  Issues:
+   >  1. If you see a nondescript error that includes `EvmError: Revert` and `Script failed` then you likely need to change the `IMPL_SALT` environment variable. This variable determines the addresses of various smart contracts that are deployed via CREATE2. If the same IMPL_SALT is used to deploy the same contracts twice, the second deployment will fail. You can generate a new IMPL_SALT by running `direnv allow` anywhere in the Optimism Monorepo.
+   >  2. If you see another error logs, check if you ran `make cannon-prestate` from step `2.4`
 
 
 4. Retrieve the address of the newly deployed contracts `L2OutputOracleProxy` in the L1 network:
