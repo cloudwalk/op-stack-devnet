@@ -16,3 +16,4 @@ Available options:
 1. [Running a single-node network without Docker](./single-node-no-docker.md): This option provides a fully autonomous startup.
 2. [Running a three-node network using Docker](./three-node-using-docker.md): This option requires specific files as outlined in option 1.
 3. [Architecture for monitoring](./architecture-for-monitoring.md): This option provides a description for installation and configuration block excplorer and metrics services (blockscout, prometheus, grafana, etc.).
+4. [Debug mode](./debug_mode.md): This option provides a description for installation and configuration block excplorer and metrics services (blockscout, prometheus, grafana, etc.).

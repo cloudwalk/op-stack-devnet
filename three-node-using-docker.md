@@ -15,7 +15,7 @@ This instruction is actual for the following versions of OP-Stack repositories:
 
 2.  This instruction was checked on:
     * `Ubuntu 22.04.4 LTS`;
-    * `docker version 25.0.4, build ced0996` installed according to the [official instructions](https://docs.docker.com/desktop/install/ubuntu/);
+    * `docker version 25.0.4, build 1a576c5` installed according to the [official instructions](https://docs.docker.com/desktop/install/ubuntu/);
     * `jq` installed as `sudo apt install -y jq`.
 
 
