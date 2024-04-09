@@ -2,9 +2,9 @@ version: '3.9'
 
 services:
   backend:
-    image: $CW_BLOCKSCOUT_IMAGE_BACKEND
+    image: ${CW_BLOCKSCOUT_IMAGE_BACKEND}
     pull_policy: always
-    restart: on-failure:5
+    restart: on-failure
     stop_grace_period: 5m
     container_name: 'backend'
     command: sh -c "bin/blockscout eval \"Elixir.Explorer.ReleaseTasks.create_and_migrate()\" && bin/blockscout start"

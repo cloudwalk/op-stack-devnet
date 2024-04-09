@@ -19,6 +19,10 @@ pwd
 echo "Up node 3:"
 sudo ./up.sh
 
+cd ../metrics
+pwd
+echo "Up metrics:"
+sudo ./up.sh
 
 if [ ${1:--default} == "--debug" ]
   then

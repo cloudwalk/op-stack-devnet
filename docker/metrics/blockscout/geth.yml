@@ -21,8 +21,8 @@ services:
       file: ./services/backend.yml
       service: backend
     environment:
-        ETHEREUM_JSONRPC_VARIANT: 'geth'
-        CHAIN_ID: '3007'
+        ETHEREUM_JSONRPC_VARIANT: ${ETHEREUM_JSONRPC_VARIANT}
+        CHAIN_ID: ${CHAIN_ID}
 
   visualizer:
     extends:

@@ -1,0 +1,34 @@
+#!/bin/bash
+
+#blockscout backend
+export ETHEREUM_JSONRPC_VARIANT="geth"
+export CHAIN_ID=3007
+
+#blockscout nginx proxy
+export INTERNAL_L2_RPC="http://192.168.10.31:8545" #ip of node-03 container with internal port
+export NGINX_SERVER_NAME="localhost" #need change to public ip before deployment
+
+#blockscout frontend
+export NEXT_PUBLIC_NETWORK_RPC_URL="http://127.0.0.1/rpc" #need change to public ip
+export NEXT_PUBLIC_API_HOST="127.0.0.1" #need change to public ip
+export NEXT_PUBLIC_API_PROTOCOL=http
+export NEXT_PUBLIC_API_PORT=80
+export NEXT_PUBLIC_STATS_API_HOST=http://127.0.0.1:8080  #need change to public ip
+export NEXT_PUBLIC_NETWORK_NAME=CW Op Stack
+export NEXT_PUBLIC_NETWORK_SHORT_NAME=CW Op Stack
+export NEXT_PUBLIC_NETWORK_ID=3007
+export NEXT_PUBLIC_NETWORK_CURRENCY_NAME=Ether
+export NEXT_PUBLIC_NETWORK_CURRENCY_SYMBOL=ETH
+export NEXT_PUBLIC_NETWORK_CURRENCY_DECIMALS=18
+export NEXT_PUBLIC_API_BASE_PATH=/
+export NEXT_PUBLIC_APP_HOST="127.0.0.1" #need change to public ip
+export NEXT_PUBLIC_APP_PROTOCOL=http
+export NEXT_PUBLIC_HOMEPAGE_CHARTS=['daily_txs']
+export NEXT_PUBLIC_VISUALIZE_API_HOST=http://127.0.0.1:8082 #need change to public ip
+export NEXT_PUBLIC_IS_TESTNET=true
+export NEXT_PUBLIC_API_WEBSOCKET_PROTOCOL=ws
+export NEXT_PUBLIC_ROLLUP_TYPE=optimistic
+export NEXT_PUBLIC_ROLLUP_L1_BASE_URL=http://dockerhost:8333 #need change to L1 public RPC ip
+export NEXT_PUBLIC_DATA_AVAILABILITY_ENABLED=true #enable blob transactions info
+export NEXT_PUBLIC_ROLLUP_L2_WITHDRAWAL_URL=https://127.0.0.1:8545/bridge/withdraw #custom IP for L2 withdrawal
+export NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID="" #need set wallet connect project id

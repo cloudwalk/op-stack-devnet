@@ -1,6 +1,6 @@
 services:
   grafana:
-    image: $CW_GRAFANA_IMAGE_GRAFANA
+    image: ${CW_GRAFANA_IMAGE_GRAFANA}
     container_name: grafana
     restart: on-failure:5
     user: "0:0"

@@ -3,7 +3,7 @@ services:
   #influx begin
   influxdb:
     # Full tag list: https://hub.docker.com/r/library/influxdb/tags/
-    image: $CW_GRAFANA_IMAGE_INFLUXDB
+    image: ${CW_GRAFANA_IMAGE_INFLUXDB}
     container_name: influxdb
     restart: on-failure:5
     extra_hosts: # for  Linux hosts since version 20.10
@@ -18,7 +18,7 @@ services:
       - "8083:8083"
 
   telegraf:
-    image: $CW_GRAFANA_IMAGE_TELEGRAF
+    image: ${CW_GRAFANA_IMAGE_TELEGRAF}
     user: telegraf:$CW_OP_TELEGRAF_DOCKER_ID
     container_name: telegraf
     restart: on-failure:5
@@ -35,7 +35,7 @@ services:
 
   kapacitor:
     # Full tag list: https://hub.docker.com/r/library/kapacitor/tags/
-    image: $CW_GRAFANA_IMAGE_KAPACITOR
+    image: ${CW_GRAFANA_IMAGE_KAPACITOR}
     container_name: kapacitor
     restart: on-failure:5
     extra_hosts: # for  Linux hosts since version 20.10
@@ -50,7 +50,7 @@ services:
       - "9092:9092"
 
   chronograf:
-    image: $CW_GRAFANA_IMAGE_CHRONOGRAF
+    image: ${CW_GRAFANA_IMAGE_CHRONOGRAF}
     container_name: chronograf
     restart: on-failure:5
     extra_hosts: # for  Linux hosts since version 20.10

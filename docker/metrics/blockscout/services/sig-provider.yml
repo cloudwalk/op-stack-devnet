@@ -2,8 +2,8 @@ version: '3.9'
 
 services:
   sig-provider:
-    image: $CW_BLOCKSCOUT_IMAGE_SIG_PROVIDER
+    image: ${CW_BLOCKSCOUT_IMAGE_SIG_PROVIDER}
     pull_policy: always
     platform: linux/amd64
-    restart: on-failure:5
+    restart: on-failure
     container_name: 'sig-provider'

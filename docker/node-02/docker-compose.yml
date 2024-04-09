@@ -8,7 +8,7 @@ services:
     extra_hosts: # for  Linux hosts since version 20.10
       - dockerhost:host-gateway
     #    image: myimage
-    image: $CW_OP_IMAGE_OP_GETH
+    image: ${CW_OP_IMAGE_OP_GETH}
     volumes:
       - ./datadir:/datadir
       - ./credentials:/credentials
@@ -46,7 +46,7 @@ services:
       - "8567:8547" # Rollup RPC, to execute special commands of the node
     extra_hosts: # for  Linux hosts since version 20.10
       - dockerhost:host-gateway
-    image: $CW_OP_IMAGE_OP_STACK
+    image: ${CW_OP_IMAGE_OP_STACK}
     depends_on:
       node2-op-geth:
         condition: service_started
@@ -60,7 +60,7 @@ services:
       - --rollup.config=/credentials/rollup.json
       - --rpc.addr=0.0.0.0
       - --rpc.port=8547
-      - --p2p.static=/ip4/192.168.10.12/tcp/9003/p2p/$CW_OP_P2P_ID_NODE1,/ip4/192.168.10.22/tcp/9003/p2p/$CW_OP_P2P_ID_NODE3
+      - --p2p.static=/ip4/192.168.10.12/tcp/9003/p2p/$CW_OP_P2P_ID_NODE1,/ip4/192.168.10.32/tcp/9003/p2p/$CW_OP_P2P_ID_NODE3
       - --p2p.listen.ip=0.0.0.0
       - --p2p.listen.tcp=9003
       - --p2p.listen.udp=9003
@@ -77,4 +77,3 @@ networks:
   op-local:
     name: op-local
     external: true
-

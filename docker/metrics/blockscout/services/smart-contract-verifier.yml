@@ -2,10 +2,10 @@ version: '3.9'
 
 services:
   smart-contract-verifier:
-    image: $CW_BLOCKSCOUT_IMAGE_SC_VERIFIER
+    image: ${CW_BLOCKSCOUT_IMAGE_SC_VERIFIER}
     pull_policy: always
     platform: linux/amd64
-    restart: on-failure:5
+    restart: on-failure
     container_name: 'smart-contract-verifier'
     env_file:
       -  ../envs/common-smart-contract-verifier.env

@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   redis-db:
-    image: $CW_BLOCKSCOUT_IMAGE_REDIS
+    image: ${CW_BLOCKSCOUT_IMAGE_REDIS}
     container_name: redis-db
     command: redis-server
     volumes:

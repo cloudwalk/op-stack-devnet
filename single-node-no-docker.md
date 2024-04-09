@@ -429,10 +429,6 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    ```bash
    forge script scripts/Deploy.s.sol:Deploy --private-key $GS_ADMIN_PRIVATE_KEY --broadcast --rpc-url $L1_RPC_URL --slow
    ```
-   
-      
-
-!!!!make cannon-prestate!!!!
 
 
    Contract deployment can take up to 15 minutes. Please wait for all smart contracts to be fully deployed before

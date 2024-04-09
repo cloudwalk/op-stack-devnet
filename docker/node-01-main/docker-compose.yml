@@ -7,13 +7,10 @@ services:
       - "8546:8546" # WebSocket
     extra_hosts: # for  Linux hosts since version 20.10
       - dockerhost:host-gateway
-    image: $CW_OP_IMAGE_OP_GETH
+    image: ${CW_OP_IMAGE_OP_GETH}
     volumes:
       - ./datadir:/datadir
       - ./credentials:/credentials
-    depends_on:
-      influxdb:
-        condition: service_started
     command:
       - geth
       - --datadir=/datadir
@@ -38,14 +35,14 @@ services:
       - --authrpc.port=8551
       - --authrpc.jwtsecret=/credentials/jwt.txt
       - --rollup.disabletxpoolgossip=true
-    #      - --metrics
-    #      - --metrics.expensive
-    #      - --metrics.influxdb
-    #      - --metrics.influxdb.endpoint=http://192.168.10.15:8086
-    #      - --metrics.influxdb.username=geth
-    #      - --metrics.influxdb.password=geth
-    #      - --metrics.influxdb.database=geth
-    #      - --miner.gaslimit=100000000
+      - --metrics
+      - --metrics.expensive
+      - --metrics.influxdb
+      - --metrics.influxdb.endpoint=http://192.168.10.15:8086 #influxdb container IP
+      - --metrics.influxdb.username=geth
+      - --metrics.influxdb.password=geth
+      - --metrics.influxdb.database=geth
+      - --miner.gaslimit=100000000
     networks:
       op-local:
         ipv4_address: 192.168.10.11
@@ -56,7 +53,7 @@ services:
       - "8547:8547" # Rollup RPC, to execute special commands of the node
     extra_hosts: # for  Linux hosts since version 20.10
       - dockerhost:host-gateway
-    image: $CW_OP_IMAGE_OP_STACK
+    image: ${CW_OP_IMAGE_OP_STACK}
     depends_on:
       node1-op-geth:
         condition: service_started
@@ -68,8 +65,8 @@ services:
       - --l2=http://192.168.10.11:8551
       - --l2.jwt-secret=/credentials/jwt.txt
       - --sequencer.enabled
-      - --sequencer.l1-confs=3
-      - --verifier.l1-confs=3
+      - --sequencer.l1-confs=5
+      - --verifier.l1-confs=4
       - --rollup.config=/credentials/rollup.json
       - --rpc.addr=0.0.0.0
       - --rpc.port=8547
@@ -94,7 +91,7 @@ services:
       - "8548:8548" # Batcher RPC, to safe stop and maybe some other commands
     extra_hosts: # for  Linux hosts since version 20.10
       - dockerhost:host-gateway
-    image: $CW_OP_IMAGE_OP_STACK
+    image: ${CW_OP_IMAGE_OP_STACK}
     depends_on:
       node1-op-geth:
         condition: service_started
@@ -116,6 +113,7 @@ services:
       - --private-key=$CW_OP_BATCHER_KEY
       - --max-channel-duration=15
       - --metrics.enabled
+#      - --data-availability-type=blobs
     networks:
       op-local:
         ipv4_address: 192.168.10.13
@@ -126,70 +124,25 @@ services:
       - "8560:8560" # Proposer RPC, just for possible future usage
     extra_hosts: # for  Linux hosts since version 20.10
       - dockerhost:host-gateway
-    image: $CW_OP_IMAGE_OP_STACK
+    image: ${CW_OP_IMAGE_OP_STACK}
     depends_on:
       node1-op-node:
         condition: service_started
     command:
       - op-proposer
-      - --poll-interval=12s
+      - --poll-interval=6s
       - --rpc.port=8560
       - --rollup-rpc=http://192.168.10.12:8547
       - --l2oo-address=$CW_OP_L2OOP_ADDRESS
       - --private-key=$CW_OP_PROPOSER_KEY
       - --l1-eth-rpc=$CW_OP_L1_RPC_URL
+      - --num-confirmations=5
+      - --allow-non-finalized=true
+      - --rpc.enable-admin=true
       - --metrics.enabled
     networks:
       op-local:
         ipv4_address: 192.168.10.14
-
-  #influx begin
-  influxdb:
-    extends:
-      file: ../metrics/grafana/influx/docker-compose-influx.yml
-      service: influxdb
-    networks:
-      op-local:
-        ipv4_address: 192.168.10.15
-
-  telegraf:
-    extends:
-      file: ../metrics/grafana/influx/docker-compose-influx.yml
-      service: telegraf
-    networks:
-      op-local:
-        ipv4_address: 192.168.10.16
-    depends_on:
-      influxdb:
-        condition: service_started
-
-  kapacitor:
-    extends:
-      file: ../metrics/grafana/influx/docker-compose-influx.yml
-      service: kapacitor
-    networks:
-      op-local:
-        ipv4_address: 192.168.10.17
-    depends_on:
-      influxdb:
-        condition: service_started
-
-  chronograf:
-    extends:
-      file: ../metrics/grafana/influx/docker-compose-influx.yml
-      service: chronograf
-    networks:
-      op-local:
-        ipv4_address: 192.168.10.18
-
-    depends_on:
-      influxdb:
-        condition: service_started
-      kapacitor:
-        condition: service_started
-      telegraf:
-        condition: service_started
-  #influx end
 
 networks:
   op-local:

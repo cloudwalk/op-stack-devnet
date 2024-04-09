@@ -1,0 +1,197 @@
+services:
+  #Blockscout begin
+  redis-db:
+    extends:
+      file: ../metrics/blockscout/geth.yml
+      service: redis-db
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.33
+
+  db-init:
+    extends:
+      file: ../metrics/blockscout/geth.yml
+      service: db-init
+
+  db:
+    extends:
+      file: ../metrics/blockscout/geth.yml
+      service: db
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.34
+        aliases:
+          - database
+    depends_on:
+      db-init:
+        condition: service_started
+
+  backend:
+    extends:
+      file: ../metrics/blockscout/geth.yml
+      service: backend
+    ports:
+      - 4000:4000
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.35
+    depends_on:
+      db:
+        condition: service_started
+      redis-db:
+        condition: service_started
+
+  frontend:
+    extends:
+      file: ../metrics/blockscout/geth.yml
+      service: frontend
+    ports:
+      - 3000:3000
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.36
+    depends_on:
+      - backend
+
+  visualizer:
+    extends:
+      file: ../metrics/blockscout/geth.yml
+      service: visualizer
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.38
+
+  sig-provider:
+    extends:
+      file: ../metrics/blockscout/geth.yml
+      service: sig-provider
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.39
+
+  stats-db-init:
+    extends:
+      file: ../metrics/blockscout/geth.yml
+      service: stats-db-init
+
+  stats-db:
+    depends_on:
+      stats-db-init:
+        condition: service_started
+    extends:
+      file: ../metrics/blockscout/geth.yml
+      service: stats-db
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.41
+
+  stats:
+    depends_on:
+      - stats-db
+      - backend
+    extends:
+      file: ../metrics/blockscout/geth.yml
+      service: stats
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.42
+
+  proxy:
+    depends_on:
+      - backend
+      - frontend
+      - stats
+    extends:
+      file: ../metrics/blockscout/geth.yml
+      service: proxy
+    ports:
+      - 80:80
+      - 8080:8080
+      - 8085:8085
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.43
+  #  blockscout end
+
+  #grafana begin
+  grafana:
+    extends:
+      file: ../metrics/grafana/grafana/docker-compose-grafana.yml
+      service: grafana
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.44
+  #grafana end
+
+  #prometheus begin
+  prometheus:
+    extends:
+      file: ../metrics/grafana/prometheus/docker-compose-prometheus.yml
+      service: prometheus
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.45
+  #prometheus end
+
+  #influx grafana begin
+  influxdb:
+    extends:
+      file: ../metrics/grafana/influx/docker-compose-influx.yml
+      service: influxdb
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.15
+
+  telegraf:
+    extends:
+      file: ../metrics/grafana/influx/docker-compose-influx.yml
+      service: telegraf
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.16
+    depends_on:
+      influxdb:
+        condition: service_started
+
+  kapacitor:
+    extends:
+      file: ../metrics/grafana/influx/docker-compose-influx.yml
+      service: kapacitor
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.17
+    depends_on:
+      influxdb:
+        condition: service_started
+
+  chronograf:
+    extends:
+      file: ../metrics/grafana/influx/docker-compose-influx.yml
+      service: chronograf
+    networks:
+      op-local:
+        ipv4_address: 192.168.10.18
+
+    depends_on:
+      influxdb:
+        condition: service_started
+      kapacitor:
+        condition: service_started
+      telegraf:
+        condition: service_started
+  #influx grafana end
+
+networks:
+  op-local:
+    name: op-local
+    external: true
+#    driver: bridge
+#    driver_opts:
+#      com.docker.network.driver.mtu: 5000
+volumes:
+  grafana-data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '../metrics/data/grafana/data'

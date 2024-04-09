@@ -2,10 +2,10 @@ version: '3.9'
 
 services:
   frontend:
-    image: $CW_BLOCKSCOUT_IMAGE_FRONTEND
+    image: ${CW_BLOCKSCOUT_IMAGE_FRONTEND}
     pull_policy: always
     platform: linux/amd64
-    restart: on-failure:5
+    restart: on-failure
     container_name: 'frontend'
     env_file:
       -  ../envs/common-frontend.env

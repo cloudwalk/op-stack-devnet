@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   proxy:
-    image: $CW_BLOCKSCOUT_IMAGE_NGINX
+    image: ${CW_BLOCKSCOUT_IMAGE_NGINX}
     container_name: proxy
     extra_hosts:
       - 'host.docker.internal:host-gateway'
@@ -11,3 +11,4 @@ services:
     environment:
       BACK_PROXY_PASS: ${BACK_PROXY_PASS:-http://backend:4000}
       FRONT_PROXY_PASS: ${FRONT_PROXY_PASS:-http://frontend:3000}
+      INTERNAL_L2_RPC: ${INTERNAL_L2_RPC}
