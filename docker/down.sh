@@ -2,7 +2,13 @@
 
 set -euo pipefail # see https://gist.github.com/mohanpedala/1e2ff5661761d3abd0385e8223e16425
 
-cd metrics
+cd explorer
+pwd
+echo "Down explorer:"
+sudo ./down.sh
+echo ""
+
+cd ../metrics
 pwd
 echo "Down metrics:"
 sudo ./down.sh

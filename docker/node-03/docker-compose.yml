@@ -36,7 +36,6 @@ services:
       - --authrpc.jwtsecret=/credentials/jwt.txt
       - --rollup.disabletxpoolgossip=true
       - --rollup.sequencerhttp=http://192.168.10.11:8545
-      - --verbosity=5
       - --metrics
       - --metrics.addr=192.168.10.31
       - --metrics.expensive
@@ -74,6 +73,7 @@ services:
       - --l1=$CW_OP_L1_RPC_URL
       - --l1.rpckind=$CW_OP_L1_RPC_KIND
       - --metrics.enabled
+      - --l1.beacon=$CW_OP_L1_BEACON_URL
     networks:
       op-local:
         ipv4_address: 192.168.10.32

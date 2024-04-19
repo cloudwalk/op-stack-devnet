@@ -43,6 +43,9 @@ services:
       - --metrics.influxdb.password=geth
       - --metrics.influxdb.database=geth
       - --miner.gaslimit=100000000
+      - --override.cancun=1712741768
+      - --override.canyon=1712742768
+      - --override.ecotone=1712743768
     networks:
       op-local:
         ipv4_address: 192.168.10.11
@@ -81,6 +84,10 @@ services:
       - --p2p.discovery.path=/p2p/opnode_discovery_db
       - --l1=$CW_OP_L1_RPC_URL
       - --l1.rpckind=$CW_OP_L1_RPC_KIND
+      - --l1.beacon=$CW_OP_L1_BEACON_URL
+      - --override.canyon=1712742768
+      - --override.delta=1712743568
+      - --override.ecotone=1712743768
     networks:
       op-local:
         ipv4_address: 192.168.10.12
@@ -111,9 +118,9 @@ services:
       - --rpc.enable-admin
       - --l1-eth-rpc=$CW_OP_L1_RPC_URL
       - --private-key=$CW_OP_BATCHER_KEY
-      - --max-channel-duration=15
+      - --max-channel-duration=900
       - --metrics.enabled
-#      - --data-availability-type=blobs
+      - --data-availability-type=blobs
     networks:
       op-local:
         ipv4_address: 192.168.10.13
