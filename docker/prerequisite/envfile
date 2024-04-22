@@ -7,11 +7,9 @@ export CW_OP_L1_RPC_KIND="any" # Available options are: alchemy, quicknode, pari
 export CW_OP_BATCHER_KEY="0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"
 export CW_OP_PROPOSER_KEY="0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a"
 export CW_OP_L2OOP_ADDRESS="0x51A1ceB83B83F1985a81C295d1fF28Afef186E02" # Address of the "L2OutputOracleProxy" contract on L1
-export CW_OP_L1SBP_ADDRESS="0x4C4a2f8c81640e47606d3fd77B353E87Ba015584" # Address of the "L1StandardBridgeProxy" contract on L1
 export CW_OP_CONFIG_NAME="local-op-devnet"
 export CW_OP_L2_NETWORK_ID=3007
-export CW_OP_L1_BEACON_URL="https://ethereum-sepolia-beacon-api.publicnode.com"
-#export CW_OP_L1_BEACON_URL="http://dockerhost:8333"
+export CW_OP_L1_BEACON_URL="http://192.168.10.2:3500"
 
 # P2P parameters
 export CW_OP_P2P_PRIVATE_KEY_NODE1="d01aba27820aeeb60ead4aed481eb30107426c18fd2e3133f1abac8fcd570d01"

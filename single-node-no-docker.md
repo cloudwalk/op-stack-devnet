@@ -10,7 +10,7 @@ protect private keys of accounts that are used to create and run the L2 network 
 network. It is strongly recommended to use hardware keys or special services to generate and use private keys
 like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
 
-## 1. Prerequisites and notes
+## Step 1. Prerequisites and notes
 
 1. Ensure that the following software is installed on your local machine:
     * `curl`;
@@ -48,7 +48,6 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    3007
    ```
 
-
 5. Select the L1 network to use. It can be `Ethereum Mainnet`, `Polygon`, `Goerli`, or a locally
    running [Ganache](https://trufflesuite.com/ganache/) or locally
    running [Hardhat](https://hardhat.org/hardhat-network/docs/overview), or any other EVM-compatible network. You need
@@ -72,7 +71,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
 6. This instruction assumes that all the necessary repositories will be cloned to your home directory (`~/`). If this is
    not the case, please replace `~` with the path to the required directory.
 
-## 2. Clone, fix, and build repositories
+## Step 2. Clone, fix, and build repositories
 
 *Tip:* Subsections 2.1 and 2.2 below can be executed in parallel.
 
@@ -123,7 +122,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    make geth
    ```
 
-## 3. Generate accounts and fund them
+## Step 3. Generate accounts and fund them
 
 1. Chose a mnemonic and generate 4 accounts using it: `Admin`, `Batcher`, `Proposer`, `Sequencer`. This instruction uses
    the Hardhat [test mnemonic](https://hardhat.org/hardhat-network/docs/reference#initial-state):
@@ -166,7 +165,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    *Tip:* If you use Ganache with the settings provided in p.1.5, all the accounts are already funded at the Ganache
    startup.
 
-## 4. Configure the network
+## Step 4. Configure the network
 
 1. In the Optimism root directory, copy the environment file:
    ```bash
@@ -232,6 +231,8 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    # Private key to use for contract deployments, you don't need to worry about
    # this for the Getting Started guide.
    export PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+
+   export L2OOP_ADDRESS="" # Address of the "L2OutputOracleProxy" contract on L1 (should be set after deployment L1 contracts)
 
 ```
 
@@ -337,7 +338,10 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
      "faultGameGenesisBlock": 0,
      "faultGameGenesisOutputRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
      "preimageOracleMinProposalSize": 10000,
-     "preimageOracleChallengePeriod": 120
+     "preimageOracleChallengePeriod": 120,
+     "l2GenesisCanyonTimeOffset": "0x0",
+     "l2GenesisDeltaTimeOffset": "0x0",
+     "l2GenesisEcotoneTimeOffset": "0x0"
    }
 
    ```
@@ -358,7 +362,9 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
       in [section 3](#3-generate-accounts-and-fund-them);
     * `batchSenderAddress` -- the address of account `Batcher` chosen
       in [section 3](#3-generate-accounts-and-fund-them);
-    * `l2OutputOracleStartingTimestamp` -- the timestamp of the starting L1 block obtained in the previous step;
+    * `l2OutputOracleSubmissionInterval` -- is the number of L2 blocks between outputs that are submitted to the L2OutputOracle contract located on L1.
+    * `l2OutputOracleStartingBlockNumber` -- is the starting block number for the L2OutputOracle. Must be greater than or equal to the first Bedrock block. The first L2 output will correspond to this value plus the submission interval.
+    * `l2OutputOracleStartingTimestamp` -- the timestamp of the starting L1 block obtained in the previous step.
     * `l2OutputOracleProposer` -- the address of account `Proposer` chosen
       in [section 3](#3-generate-accounts-and-fund-them);
     * `gasPriceOracleOverhead`, `gasPriceOracleScalar` -- gas price related fields, they were set to the minimum
@@ -381,9 +387,12 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
     * `faultGameGenesisBlock` -- is the block number for genesis.
     * `faultGameGenesisOutputRoot` -- is the output root for the genesis block.
     * `preimageOracleMinProposalSize` is the minimum number of bytes that a large preimage oracle proposal can be.
-    * `PreimageOracleChallengePeriod` -- is the number of seconds that challengers have to challenge a large preimage proposal.
+    * `preimageOracleChallengePeriod` -- is the number of seconds that challengers have to challenge a large preimage proposal.
+    * `l2GenesisCanyonTimeOffset` -- is the number of seconds after genesis block that Canyon hard fork activates. **Set it to 0 to activate at genesis**. **Nil** to disable Canyon.
+    * `l2GenesisDeltaTimeOffset` -- is the number of seconds after genesis block that Delta hard fork activates. **Set it to 0 to activate at genesis**. **Nil** to disable Canyon.
+    * `l2GenesisEcotoneTimeOffset` -- is the number of seconds after genesis block that Ecotone hard fork activates. **Set it to 0 to activate at genesis**. **Nil** to disable Canyon.
 
-## 7. Deploy the Create2 Factory (Optional)
+## Step 5. Deploy the Create2 Factory (Optional)
 
 >   This step is typically only necessary if you are deploying your OP Stack chain to custom L1 chain. If you are deploying your OP Stack chain to Sepolia, you can safely skip this step.
 
@@ -412,7 +421,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    cast publish --rpc-url $L1_RPC_URL 0xf8a58085174876e800830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf31ba02222222222222222222222222222222222222222222222222222222222222222a02222222222222222222222222222222222222222222222222222222222222222
     ```
 
-## 8. Deploy the L1 contracts
+## Step 6. Deploy the L1 contracts
 
 1. Navigate to the `packages/contracts-bedrock` directory within the Optimism Monorepo:
    ```bash
@@ -430,7 +439,6 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    forge script scripts/Deploy.s.sol:Deploy --private-key $GS_ADMIN_PRIVATE_KEY --broadcast --rpc-url $L1_RPC_URL --slow
    ```
 
-
    Contract deployment can take up to 15 minutes. Please wait for all smart contracts to be fully deployed before
    proceeding to the next step.
 
@@ -444,38 +452,25 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
 
 4. Retrieve the address of the newly deployed contracts `L2OutputOracleProxy` in the L1 network:
    ```bash
-   cat deployments/local-op-devnet/.deploy | grep -E "(L2OutputOracleProxy|L1StandardBridgeProxy)"
+   cat deployments/local-op-devnet/.deploy | grep -E "(L2OutputOracleProxy)"
    ```
 
    The result will look like:
    ```
-   "L1StandardBridgeProxy": "0x0B306BF915C4d645ff596e518fAf3F9669b97016",
    "L2OutputOracleProxy": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
    ```
 
-## 6. Generate L2 configuration files
+## Step 7. Generate L2 configuration files
 
-1. Create the `op_env.sh` file with environment variables like:
+1. Add `L2OutputOracleProxy` address in `~/optimism/.envrc` file:
    ```bash
-   touch ~/op_env.sh
+   export L2OOP_ADDRESS="0xc6e7DF5E7b4f2A278906862b61205850344D4e7d"
    ```
 
-
-2. Populate the `op_env.sh` file with data obtained from the previous sections:
-   ```bash
-   #!/bin/bash
-   export CW_OP_SEQUENCER_KEY="0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6"
-   export CW_OP_SEQUENCER_ADDRESS="0x90F79bf6EB2c4f870365E785982E1f101E93b906"
-   export CW_OP_L1_RPC_URL="http://localhost:8333"
-   export CW_OP_L1_RPC_KIND="any" # Available options are: alchemy, quicknode, parity, nethermind, debug_geth, erigon, basic, and any
-   export CW_OP_BATCHER_KEY="0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a"
-   export CW_OP_PROPOSER_KEY="0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a"
-   export CW_OP_L2OOP_ADDRESS="0xc6e7DF5E7b4f2A278906862b61205850344D4e7d" # Address of the "L2OutputOracleProxy" contract on L1
-   export CW_OP_L1SBP_ADDRESS="0x0B306BF915C4d645ff596e518fAf3F9669b97016" # Address of the "L1StandardBridgeProxy" contract on L1
-   export CW_OP_CONFIG_NAME="local-op-devnet"
-   export CW_OP_L2_NETWORK_ID=3007
+2. Pull the environment variables into context using `direnv` (command should be run in any place in folder `~/optimism`):
+   ``` bash
+   direnv allow .
    ```
-
 
 3. Head over to the `op-node` directory:
    ```bash
@@ -485,21 +480,25 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
 
 4. Generate the genesis and rollup configuration JSON files:
    ```bash
-   . ~/op_env.sh # Load environment variables
    go run cmd/main.go genesis l2 \
-   --deploy-config ../packages/contracts-bedrock/deploy-config/$CW_OP_CONFIG_NAME.json \
-   --l1-deployments ../packages/contracts-bedrock/deployments/$CW_OP_CONFIG_NAME/.deploy \
+   --deploy-config ../packages/contracts-bedrock/deploy-config/$DEPLOYMENT_CONTEXT.json \
+   --l1-deployments ../packages/contracts-bedrock/deployments/$DEPLOYMENT_CONTEXT/.deploy \
    --outfile.l2 genesis.json \
    --outfile.rollup rollup.json \
-   --l1-rpc $CW_OP_L1_RPC_URL
+   --l1-rpc $L1_RPC_URL
    ```
    You should find the `genesis.json` and `rollup.json` files within the `op-node` directory.
 
+5. Generate the `jwt.txt` file (used for communication between different apps) with the following command:
+   ```bash
+   openssl rand -hex 32 > jwt.txt
+   ```
 
-5. You have now prepared the L1 network and obtained all the necessary
-   files (`op_env.sh`, `genesis.json`, `rollup.json`) to initialize and run your L2 network.
+6. You have now prepared the L1 network and obtained all the necessary
+   files (`jwt.txt`, `genesis.json`, `rollup.json`) to initialize and run your L2 network.
 
-## 7. Initialize L2
+
+## Step 8. Initialize L2
 
 1. If you skipped previous sections and obtained the configuration files (`genesis.json`, `rollup.json`, `op_env.sh`)
    from someone else:
@@ -511,13 +510,6 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    ```bash
    cd ~/optimism/op-node
    ```
-   
-
-3. Generate the `jwt.txt` file (used for communication between different apps) with the following command:
-   ```bash
-   openssl rand -hex 32 > jwt.txt
-   ```
-
 
 4. Copy files `genesis.json` and `jwt.txt` into `op-geth` so they can be used to initialize and run `op-geth` in just a
    minute:
@@ -530,18 +522,16 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
 5. Head over to the `op-geth` repository directory and initialize it:
    ```bash
    cd ~/op-geth # Switch to the needed directory
-   . ~/op_env.sh  # Load environment variables 
    rm -rf datadir # Remove the previous data
    mkdir datadir
    ./build/bin/geth init --datadir=datadir genesis.json
    ```
 
-## 8. Run and manage the L2 node software
+## Step 9. Run and manage the L2 node software
 
 1. Run `op-geth` from the appropriate directory:
    ```bash
    cd ~/op-geth  # Switch to the needed directory
-   . ~/op_env.sh  # Load environment variables
    ./build/bin/geth \
       --datadir=./datadir \
       --http \
@@ -559,7 +549,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
       --gcmode=archive \
       --nodiscover \
       --maxpeers=0 \
-      --networkid=$CW_OP_L2_NETWORK_ID \
+      --networkid=3007 \
       --authrpc.vhosts="*" \
       --authrpc.addr=0.0.0.0 \
       --authrpc.port=8551 \
@@ -570,11 +560,12 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    If you got an error stop the app and try to execute steps of section [7](#7-initialize-l2) again. Then run `op-geth`
    again.
 
+   `networkid` - should be your L2 network ID, `3007` in this case (as it is chosen in `~/optimism/packages/contracts-bedrock/deploy-config/local-op-devnet.json`).
+
 
 2. Open another terminal and run `op-node` from the appropriate directory:
    ```bash
    cd ~/optimism/op-node # Switch to the needed directory
-   . ~/op_env.sh # Load environment variables 
    ./bin/op-node \
       --l2=http://localhost:8551 \
       --l2.jwt-secret=./jwt.txt \
@@ -586,16 +577,15 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
       --rpc.port=8547 \
       --rpc.enable-admin \
       --p2p.disable \
-      --p2p.sequencer.key=$CW_OP_SEQUENCER_KEY \
-      --l1=$CW_OP_L1_RPC_URL \
-      --l1.rpckind=$CW_OP_L1_RPC_KIND
+      --p2p.sequencer.key=$GS_SEQUENCER_PRIVATE_KEY \
+      --l1=$L1_RPC_URL \
+      --l1.rpckind=$L1_RPC_KIND
     ```
 
 
 3. Open another terminal and run `op-batcher` from the appropriate directory, like:
    ```bash
    cd ~/optimism/op-batcher # Switch to the needed directory
-   . ~/op_env.sh # Load environment variables 
    ./bin/op-batcher \
       --l2-eth-rpc=http://localhost:8545 \
       --rollup-rpc=http://localhost:8547 \
@@ -607,8 +597,8 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
       --rpc.addr=0.0.0.0 \
       --rpc.port=8548 \
       --rpc.enable-admin \
-      --l1-eth-rpc=$CW_OP_L1_RPC_URL \
-      --private-key=$CW_OP_BATCHER_KEY \
+      --l1-eth-rpc=$L1_RPC_URL \
+      --private-key=$GS_BATCHER_PRIVATE_KEY \
       --max-channel-duration=15
    ```
    *Tip:* The `--max-channel-duration=n` setting tells the batcher to write all the data to L1 every `n` L1 blocks. When
@@ -619,14 +609,13 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
 4. Open another terminal and run `op-proposer` from the appropriate directory, like:
    ```bash
    cd ~/optimism/op-proposer # Switch to the needed directory
-   . ~/op_env.sh # Load env variables 
    ./bin/op-proposer \
       --poll-interval=12s \
       --rpc.port=8560 \
       --rollup-rpc=http://localhost:8547 \
-      --l2oo-address=$CW_OP_L2OOP_ADDRESS \
-      --private-key=$CW_OP_PROPOSER_KEY \
-      --l1-eth-rpc=$CW_OP_L1_RPC_URL
+      --l2oo-address=$L2OOP_ADDRESS \
+      --private-key=$GS_PROPOSER_PRIVATE_KEY \
+      --l1-eth-rpc=$L1_RPC_URL
    ```
 
 5. To stop the network just terminate the applications run previously.
@@ -634,7 +623,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
 
 6. To reinitialize the network stop it and repeat steps of section [7](#7-initialize-l2) again.
 
-## 9. Use the newly created L2 network
+## Step 9. Use the newly created L2 network
 
 1. The URL to access RPC API endpoint of the network is: `http://localhost:8545`.
 

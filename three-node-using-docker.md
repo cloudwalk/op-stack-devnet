@@ -6,7 +6,7 @@ This instruction is actual for the following versions of OP-Stack repositories:
 
 *WARING:* The instruction below is for test purposes only and it should not be used in production. At least you should protect private keys of accounts that are used to create and run the L2 network and appropriate contracts on L1 network. It is strongly recommended to use hardware keys or special services to generate and use private keys (like OpenZeppelin Defender).
 
-## 1. Prerequisites and notes
+## Step 1. Prerequisites and notes
 
 1.  The following software should be installed:
     * `docker`;
@@ -45,7 +45,7 @@ This instruction is actual for the following versions of OP-Stack repositories:
 
 
 
-## 2. Generate P2P keys and IDs for nodes
+## Step 2. Generate P2P keys and IDs for nodes
 
 1.  Generate or select some 32-bit (64 hex chars) private keys, like:
     ```
@@ -75,7 +75,7 @@ This instruction is actual for the following versions of OP-Stack repositories:
 
 
 
-## 3. Configure the infrastructure
+## Step 3. Configure the infrastructure
 
 1.  Head over to the [docker/prerequisite](./docker/prerequisite) directory of this repository:
     ```bash
@@ -98,7 +98,6 @@ This instruction is actual for the following versions of OP-Stack repositories:
     export CW_OP_BATCHER_KEY="5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a"
     export CW_OP_PROPOSER_KEY="59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"
     export CW_OP_L2OOP_ADDRESS="0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9" # Address of the "L2OutputOracleProxy" contract on L1
-    export CW_OP_L1SBP_ADDRESS="0x0165878A594ca255338adfa4d48449f69242Eb8F" # Address of the "L1StandardBridgeProxy" contract on L1
     export CW_OP_CONFIG_NAME="local-op-devnet"
     export CW_OP_L2_NETWORK_ID=3007
 
@@ -119,7 +118,7 @@ This instruction is actual for the following versions of OP-Stack repositories:
 
 
 
-## 4. Run and manage containers
+## Step 4. Run and manage containers
 
 1.  Head over to the [docker](./docker) directory of this repository:
     ```bash
@@ -225,7 +224,7 @@ This instruction is actual for the following versions of OP-Stack repositories:
 
 
 
-## 9. Use the newly created L2 network
+## Step 5. Use the newly created L2 network
 
 1.  The nodes of the network can be accessed through their Docker internal IP addresses and ports or through the forwarded ports if you configured them (see the `docker-compose.yml` files). E.g. the default RPC URL of nodes are listed in the table bellow:
 
@@ -236,27 +235,17 @@ This instruction is actual for the following versions of OP-Stack repositories:
     | 3    | node3-op-node | http://192.168.10.31:8545 | http://127.0.0.1:8575  |
 
 2.  You can check that blocks are being produced and can be accessed through each node with the following script:
+
     ```bash
-    REQUEST_DATA='{"method":"eth_blockNumber","params":[],"id":1,"jsonrpc":"2.0"}'
-    RPC_URL="http://192.168.10.11:8545"
-    echo "RPC URL: $RPC_URL"
-    curl -H "Content-Type: application/json" -d "$REQUEST_DATA" "$RPC_URL" | jq
-    
-    RPC_URL="http://192.168.10.21:8545"
-    echo "RPC URL: $RPC_URL"
-    curl -H "Content-Type: application/json" -d "$REQUEST_DATA" "$RPC_URL" | jq
-    
-    RPC_URL="http://192.168.10.31:8545"
-    echo "RPC URL: $RPC_URL"
-    curl -H "Content-Type: application/json" -d "$REQUEST_DATA" "$RPC_URL" | jq
+    sh scripts/checkblocks.sh
     ```
 
-    The last block number of all three nodes should differ by no more than 1. 
+    The last block number of all three nodes should differ by no more than 1.
 
 
 3.  Information about getting native tokens (ETH) inside the newly created L2 network see [here](single-node-no-docker.md#9-use-the-newly-created-l2-network).
 
-## 10. Additional software for monitoring
+## Step 6. Additional software for monitoring
 
 This docker installation includes also software for:
 * exploring the blockchain data (blocks, transactions, etc.);
@@ -273,6 +262,7 @@ This docker installation includes also software for:
 * [Kapacitor](https://www.influxdata.com/time-series-platform/kapacitor/) -- a data processing engine. It works with `InfluxDB` and `Chronograf`.
 
 **Note:** All metric software docker-compose configuration files are stored in folder [docker/metrics](docker/metrics).
+All explorer software docker-compose configuration files are stored in folder [docker/explorer](docker/explorer).
 
 ### Enable the block explorer
 
@@ -282,11 +272,9 @@ No changes in configuration of nodes is needed. The explorer requests blocks and
 
 `op-geth` allows to collect data in `InfluxDB` and `Prometheus`.
 
-To allow metrics collection for `op-geth` on `node3` the following flags were added to the appropriate `docker-compose.yml` file:
+To allow metrics collection for `op-geth` on `node1` the following flags were added to the appropriate `docker-compose.yml` file:
 
 ```
-  - --http.api=debug,admin,db,eth,web3,net,personal,txpool,clique
-  - --ws.api=debug,admin,db,eth,web3,net,personal,txpool
   - --metrics
   - --metrics.addr=192.168.10.31
   - --metrics.expensive
@@ -295,6 +283,12 @@ To allow metrics collection for `op-geth` on `node3` the following flags were ad
   - --metrics.influxdb.username=geth
   - --metrics.influxdb.password=geth
   - --metrics.influxdb.database=geth
+```
+
+To allow Blockscout exlporer to collect data from `op-geth` on `node3` the following flags were updated to the appropriate `docker-compose.yml` file:
+```
+  - --http.api=debug,admin,db,eth,web3,net,personal,txpool,clique
+  - --ws.api=debug,admin,db,eth,web3,net,personal,txpool
 ```
 
 To allow metrics collection for `op-node` on `node3` and  `op-batcher`, `op-proposer` on `node1` the following flag were added to the appropriate `docker-compose.yml` files:

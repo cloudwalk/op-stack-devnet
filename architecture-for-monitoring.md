@@ -29,20 +29,11 @@ Before running docker, it is necessary to send docker group id (GID) to telegraf
 
 ### InfluxDB
 
-During the first run of docker with metrics software it is necessary to create database and user for `op-geth`:
+During the first run of docker with metrics software it is necessary to create database and user for `op-geth`. To do it, run script:
 
-1. Run the following command in terminal to enter the `influxDB` docker container:
-   ```
-   sudo docker exec -it influxdb bash
-   ```
-
-2. Create a database and a user for `op-geth`:
-
-   ```
-   influx -execute "CREATE DATABASE geth"
-   
-   influx -database 'geth' -execute "CREATE USER geth WITH PASSWORD 'geth' WITH ALL PRIVILEGES"
-   ```
+```
+   sudo scripts/influxdb.sh 
+```
 
 ## Monitoring Urls
 

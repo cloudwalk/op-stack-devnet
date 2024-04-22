@@ -42,6 +42,7 @@ services:
       - --metrics.influxdb.username=geth
       - --metrics.influxdb.password=geth
       - --metrics.influxdb.database=geth
+      - --metrics.addr=192.168.10.11
       - --miner.gaslimit=100000000
       - --override.cancun=1712741768
       - --override.canyon=1712742768
