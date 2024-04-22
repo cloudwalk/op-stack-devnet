@@ -321,6 +321,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
 
      "eip1559Denominator": 50,
      "eip1559Elasticity": 10,
+     "EIP1559DenominatorCanyon": 50,
 
      "fundDevAccounts": true,
      "faultGameWithdrawalDelay": 604800,
@@ -391,6 +392,8 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
     * `l2GenesisCanyonTimeOffset` -- is the number of seconds after genesis block that Canyon hard fork activates. **Set it to 0 to activate at genesis**. **Nil** to disable Canyon.
     * `l2GenesisDeltaTimeOffset` -- is the number of seconds after genesis block that Delta hard fork activates. **Set it to 0 to activate at genesis**. **Nil** to disable Canyon.
     * `l2GenesisEcotoneTimeOffset` -- is the number of seconds after genesis block that Ecotone hard fork activates. **Set it to 0 to activate at genesis**. **Nil** to disable Canyon.
+
+**NOTE** remove last 3 lines (`l2GenesisCanyonTimeOffset`, `l2GenesisDeltaTimeOffset`, `l2GenesisEcotoneTimeOffset`), to run single node locally without needed beacon node and ecoton. It should be used only if it is necessary to enable latest features (EIP-4844).
 
 ## Step 5. Deploy the Create2 Factory (Optional)
 
@@ -579,7 +582,8 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
       --p2p.disable \
       --p2p.sequencer.key=$GS_SEQUENCER_PRIVATE_KEY \
       --l1=$L1_RPC_URL \
-      --l1.rpckind=$L1_RPC_KIND
+      --l1.rpckind=$L1_RPC_KIND \
+      --l1.beacon=$L1_RPC_BEACON_NODE
     ```
 
 
