@@ -282,5 +282,7 @@ Where:
 
 ```bash
     cd docker/node-01-main
-    sudo docker compose --env-file ../prerequisite/envfile restart node1-op-batcher
+    sudo docker compose --env-file ../prerequisite/envfile stop node1-op-batcher
+    sudo docker compose --env-file ../prerequisite/envfile down node1-op-batcher
+    sudo docker compose --env-file ../prerequisite/envfile up node1-op-batcher -d
 ```
