@@ -1,11 +1,11 @@
 # Enable Blobs (EIP-4844) For L2 Network 
 
-Ganache is not fit for blob transactions yet, you need to run other local L1 network that supports `EIP-4844` and can provide `Beacon node RPC`.
-For development [Prysm Devnet](https://docs.prylabs.network/docs/getting-started) can be used. The original Prysm devnet manual is available [here](https://docs.prylabs.network/docs/advanced/proof-of-stake-devnet).
+Ganache is not fit for blob transactions yet. You need to run other local L1 network that supports `EIP-4844` and can provide `Beacon node RPC`.
+For development [Prysm devnet](https://docs.prylabs.network/docs/getting-started) can be used. The original Prysm devnet manual is available [here](https://docs.prylabs.network/docs/advanced/proof-of-stake-devnet).
 
 ## Step 1. Prerequisites
 
-1. Generate configuration files `genesis.json`, `rollup.json` as described in [Running a single-node manual](./single-node-no-docker.md#1-prerequisites), follow instruction from **Step 1** to **Step 7**..
+1. Generate configuration files `genesis.json`, `rollup.json` as described in [Running a single-node manual](./single-node-no-docker.md#1-prerequisites).
 
 2. Clone `Prysm` denvet repository and head over to it:
 
@@ -15,23 +15,23 @@ For development [Prysm Devnet](https://docs.prylabs.network/docs/getting-started
 
 ## Step 2. Configure and run L1 network
 
-1. Update `consensus/config.yml` file. 
+1. Update the `consensus/config.yml` file. 
 
-Check if Deneb/Cancun fork is enabled. In file should be present variables:
+Check if Deneb/Cancun fork is enabled. The following variables must be in the file:
 
 ```yaml
     DENEB_FORK_EPOCH: 0
     DENEB_FORK_VERSION: 0x20000093
 ```
 
-Update time parameters as you need:
+Update the following time parameters as you need:
 
 ```yaml
     SECONDS_PER_SLOT: 2
     SLOTS_PER_EPOCH: 2
 ```
 
-2. Update `docker-compose.yml` file.
+2. Update the `docker-compose.yml` file.
 
 Under `create-beacon-chain-genesis` service change `--fork` parameter in `command` section to:
 
@@ -39,7 +39,7 @@ Under `create-beacon-chain-genesis` service change `--fork` parameter in `comman
   - --fork=deneb
 ```
 
-Add network that will be common for L1 and L2 networks at the bottom of file:
+Add a network that will be common for L1 and L2 networks at the bottom of the file:
 
 ```yaml
   networks:
@@ -52,7 +52,7 @@ Add network that will be common for L1 and L2 networks at the bottom of file:
               gateway: 192.168.10.1
 ```
 
-Update images to latest versions:
+Update images to the latest versions:
 
 ```yaml
   beacon-chain:
@@ -63,7 +63,7 @@ Update images to latest versions:
     image: "gcr.io/prysmaticlabs/prysm/validator:v5.0.3"
 ```
 
-Add static IPs to containers:
+Add the following static IPs to containers:
 
 ```yaml
   beacon-chain:
@@ -123,14 +123,14 @@ Update `beacon-chain` ports to be accessible from L2 network:
     docker-compose up -d
 ```
 
-4. L1 network is ready to use, urls:
+4. L1 network is ready to use with the following URLs:
 
     * Beacon node RPC: http://192.168.10.2:3500
     * L1 RPC: http://192.168.10.3:8545
 
 ## Step 3. Configure and run L2 network
 
-1. Use [Running a three-node network using Docker](./three-node-using-docker.md) manual to configure L2 network, follow from **Step 1** to **Step 3**.
+1. Use the [Running a three-node network using Docker](./three-node-using-docker.md) manual to configure L2 network, following sections from **Step 1** to **Step 3**.
 
 2. Update `CW_OP_L1_BEACON_URL` variable in file `<l2-devnet-dir>/docker/prerequisite/envfile` to L1 Beacon node RPC url:
 
@@ -138,7 +138,7 @@ Update `beacon-chain` ports to be accessible from L2 network:
     export CW_OP_L1_BEACON_URL="http://192.168.10.2:3500"
 ```
 
-3. Add beacon node RPC url to each node in `docker-compose.yml` files, example for `node1`:
+3. Add the beacon node RPC URL to each node in the `docker-compose.yml` files. An example for `node1`:
 
 ```yaml
   node1-op-node:
@@ -151,7 +151,7 @@ Update `beacon-chain` ports to be accessible from L2 network:
     
 ```
 
-4. Add fork timestamps to `node1-op-node` service (Sequencer) in `docker-compose.yml` file, they should be before L2 network start timestamp to run it with genesis block:
+4. Add the fork timestamps to the `node1-op-node` service (Sequencer) in the `docker-compose.yml` file, they should be before the L2 network start timestamp to run it with genesis block:
 
 ```yaml
   node1-op-node:
@@ -166,7 +166,7 @@ Update `beacon-chain` ports to be accessible from L2 network:
     
 ```
 
-4. Add fork timestamps to `node1-op-geth` service (Execution) in `docker-compose.yml` file, they can be the same as for `node1-op-node`:
+4. Add the fork timestamps to the `node1-op-geth` service (Execution) in the `docker-compose.yml` file, they can be the same as for `node1-op-node`:
 
 ```yaml
   node1-op-geth:
@@ -186,16 +186,16 @@ Update `beacon-chain` ports to be accessible from L2 network:
 
 5. Run L2 network:
 
-Use [Running a three-node network using Docker](./three-node-using-docker.md) manual to run L2 network, follow from **Step 4** to the end.
+Use the [Running a three-node network using Docker](./three-node-using-docker.md) manual to run the L2 network, following sections from **Step 4** to the end.
 
 
 ## Step 3. Enable Blobs (EIP-4844) For L2 Network
 
-To enable blobs for L2 there are necessary to do some additional steps, because L2 network is not supporting blobs by default. Original manuals:
+To enable blobs for L2 it is necessary to do some additional steps, because the L2 network is not supporting blobs by default. Original manuals:
     - [Prepare nodes for blobs](https://docs.optimism.io/builders/node-operators/management/blobs)
     - [Switch to Using Blobs](https://docs.optimism.io/builders/chain-operators/management/blobs)
 
-1. Define `BaseFeeScalar` and `BlobBaseFeeScalar` and convert them into a single value with `ecotone-scalar utility`:
+1. Define the `BaseFeeScalar` and `BlobBaseFeeScalar` values and convert them into a single value with `ecotone-scalar utility`:
 
 ```bash
     cd ~/optimism/op-chain-ops
@@ -211,7 +211,7 @@ Output will be like:
 452312848583266388373324160190187140051835877600158453279131187578155302913
 ```
 
-2. Generate payload for setting `BaseFeeScalar` and `BlobBaseFeeScalar`, using `v1 hex encoding` value from previous step:
+2. Generate payload for setting `BaseFeeScalar` and `BlobBaseFeeScalar`, using `v1 hex encoding` value from the previous step:
 
 ```bash
     cast calldata 'setGasConfig(uint256,uint256)' 0 0x0100000000000000000000000000000000000000000000000000000b00000001
@@ -222,7 +222,7 @@ Output will be like:
     0x935f029e00000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000b00000001
 ```
 
-3. Find `SystemConfigProxy` contract address in your L1 network deploy file:
+3. Find the `SystemConfigProxy` contract address in your L1 network deploy file:
 
 ```bash
     cd ~/optimism/packages/contracts-bedrock
@@ -233,19 +233,18 @@ Output will be like:
     "SystemConfigProxy": "0x04C89607413713Ec9775E14b954286519d836FEf",
 ```
 
-4. Call `setGasConfig` function in `SystemConfigProxy` contract with generated payload:
+4. Call the `setGasConfig()` function in the `SystemConfigProxy` contract with the generated payload:
 
 ```bash
     cast send 0x04C89607413713Ec9775E14b954286519d836FEf 0x935f029e00000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000b00000001 -r http://192.168.10.3:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 ```
 
 Where:
-    - `0x04C89607413713Ec9775E14b954286519d836FEf` is `SystemConfigProxy` contract address.
+    - `0x04C89607413713Ec9775E14b954286519d836FEf` is the `SystemConfigProxy` contract address.
     - `-r` is L1 RPC url.
-    - `--private-key` is private key of admin account that was used for deploy L2 contracts to L1 network.
+    - `--private-key` is private key of admin account that was used for deploy L2-related contracts to the L1 network.
 
-5. Check if `BaseFeeScalar` and `BlobBaseFeeScalar` are set correctly:
-
+5. Check if the `BaseFeeScalar` and `BlobBaseFeeScalar` values are set correctly:
 
 ```bash
     cast call 0x420000000000000000000000000000000000000F 'baseFeeScalar()(uint256)' --gas-price 10000000 --rpc-url http://192.168.10.11:8545
@@ -256,12 +255,12 @@ Where:
 ```
 
 Where:
-    - `0x420000000000000000000000000000000000000F` is `GasPriceOracle` predeployed contract address in L2 network.
+    - `0x420000000000000000000000000000000000000F` is the `GasPriceOracle` predeployed contract address in the L2 network.
     - `--rpc-url` is L2 RPC url.
 
 **NOTE** It can take some time (~1min) to update values in L2 network and values should be the same as arguments for `ecotone-scalar` utility above.
 
-6. Enable blobs in batcher by editing `node-01/docker-compose.yml` file:
+6. Enable blobs in the batcher by editing the `node-01/docker-compose.yml` file:
 
 ```yaml
   node1-op-batcher:
@@ -278,7 +277,7 @@ Where:
     - `--max-channel-duration` is the maximum duration of a channel in seconds, for blobs it should be greater than for calldata.
     - `--data-availability-type` is the type of data availability, it should be set to `blobs` or `calldata`.
 
-7. Restart batcher:
+7. Restart the batcher:
 
 ```bash
     cd docker/node-01-main

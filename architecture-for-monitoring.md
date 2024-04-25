@@ -35,28 +35,28 @@ During the first run of docker with metrics software it is necessary to create d
    sudo scripts/influxdb.sh 
 ```
 
-## Monitoring Urls
+## Monitoring URLs
 
 
 ### Explorer services
 
-| URL                        | Software Name       | Datasource node |
+| URL                        | Software name       | Datasource node |
 |----------------------------|---------------------|-----------------|
-| http://192.168.10.35:4000/ | Blockscout (old ui) | node3           |
-| http://192.168.10.36:3000/ | Blockscout (new ui) | node3           |
+| http://192.168.10.35:4000/ | Blockscout (old UI) | node3           |
+| http://192.168.10.36:3000/ | Blockscout (new UI) | node3           |
 
 
 ### Metric services:
 
-| URL                        | Software Name |
+| URL                        | Software name |
 |----------------------------|---------------|
 | http://192.168.10.18:8888/ | Chronograf    |
 | http://192.168.10.45:9090/ | Prometheus    |
 | http://192.168.10.44:3003/ | Grafana       |
 
-### Prometheus Metrics Urls:
+### Prometheus Metrics URLs:
 
-| URL                                                | Application Name | Datasource node |
+| URL                                                | Application name | Datasource node |
 |----------------------------------------------------|------------------|-----------------|
 | http://192.168.10.31:6060/debug/metrics/prometheus | op-geth          | node3           |
 | http://192.168.10.32:7300/metrics                  | op-node          | node3           |
@@ -74,64 +74,65 @@ To avoid extra load on sequencer node, `prometheus` service and the `op-geth` me
 
 ## Grafana Configuration
 
-To configure grafana, it is necessary to define datasources and dashboards.
+To configure Grafana, it is necessary to login Grafana as an administrator, then define datasources and dashboards.
 
-To enter grafana:
-1. go to Grafana url - http://192.168.10.44:3003
-2. Enter with creds
-   * username: `root`
-   * password: `root`
+### Login Grafana
 
-### Adding Grafana Datasources
+1. Go to Grafana URL: http://192.168.10.44:3003 .
+2. Login with the creds:
+   * Username: `root`.
+   * Password: `root`.
 
-**To add InfluxDB datasource**:
+### Adding Grafana Datasource
 
-1. go to menu `'Connections' -> 'Data Sources'`
-2. click `Add new data source`
-3. Choose `InfluxDB`
-4. set url http://192.168.10.15:8086
-5. set credentials (should exist after influxdb extra step above):
-   * a. Database: `geth`
-   * b. User: `geth`
-   * c. Password `geth`
-6. Click `Save & test`
+#### Adding InfluxDB Datasource
 
-**To add Prometheus datasource**:
+1. Go to menu `'Connections' -> 'Data Sources'`.
+2. Click `Add new data source`.
+3. Choose `InfluxDB`.
+4. Set URL http://192.168.10.15:8086 .
+5. Set credentials (should exist after InfluxDB extra step above):
+   * a. Database: `geth`.
+   * b. User: `geth`.
+   * c. Password `geth`.
+6. Click `Save & test`.
 
-1. go to menu `'Connections' -> 'Data Sources'`
-2. click `Add new data source`
-3. Choose `Prometheus`
-4. set url http://192.168.10.45:9090
-6. Click `Save & test`
+#### Adding Prometheus Datasource
+
+1. Go to menu `'Connections' -> 'Data Sources'`
+2. Click `Add new data source`.
+3. Choose `Prometheus`.
+4. Set URL: http://192.168.10.45:9090 .
+6. Click `Save & test`.
 
 ### Adding Grafana Dashboards
 
-**To add InfluxDB and Prometheus dashboards**:
-1. go to menu `Dashboards`
-2. click `New`
-3. click `Import`
-4. in field `Import via grafana.com` enter `13877`. It will add dashboard from grafana website (for influxDB):
+#### Adding General InfluxDB and Prometheus dashboards
+
+1. Go to menu `Dashboards`.
+2. Click `New`.
+3. Click `Import`.
+4. In field `Import via grafana.com` enter `13877`. It will add the dashboard from the Grafana website (for InfluxDB):
    * https://grafana.com/grafana/dashboards/13877-single-geth-dashboard/
-5. click `Load`
-6. in field `InfluxDB` choose your `influxdb datasource`, created above. 
-7. click `import`
-8. repeat steps 1-3
-9. in field `Import via grafana.com` enter `14053`. It will add dashboard from grafana website (for Prometheus):
+5. Click `Load`.
+6. In field `InfluxDB` choose your `influxdb datasource`, created above. 
+7. Click `import`.
+8. Repeat steps 1-3.
+9. In field `Import via grafana.com` enter `14053`. It will add the dashboard from the Grafana website (for Prometheus):
    * https://grafana.com/grafana/dashboards/14053-geth-overview/
-10. click `Load` 
-11. in field `Prometheus` choose your `prometheus datasource`, created above.
-12. click `import`
+10. Click `Load`.
+11. In field `Prometheus` choose your `prometheus datasource`, created above.
+12. Click `import`.
 
 
-**Add Custom Prometheus dashboard**:
+#### Adding Custom InfluxDB and Prometheus dashboards
 
-Custom dashboards are located in folder `docker/metrics/dashboards`. To add it:
+Custom dashboards are located in folder `docker/metrics/dashboards`.
 
-1. go to menu `Dashboards`
-2. click `New`
-3. click `Import`
-4. upload file from folder `docker/metrics/dashboards`
-5. click `Import`
-6. You should see new dashboard
-
-After these steps you should have 2 almost the same dashboards loaded from grafana website.
+To add them:
+1. Go to menu `Dashboards`.
+2. Click `New`.
+3. Click `Import`
+4. Upload a file from folder `docker/metrics/dashboards`.
+5. Click `Import`.
+6. You should see a new dashboard.

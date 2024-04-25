@@ -237,7 +237,7 @@ This instruction is actual for the following versions of OP-Stack repositories:
 2.  You can check that blocks are being produced and can be accessed through each node with the following script:
 
     ```bash
-    sh scripts/checkblocks.sh
+    sh docker/scripts/checkblocks.sh
     ```
 
     The last block number of all three nodes should differ by no more than 1.
@@ -285,7 +285,7 @@ To allow metrics collection for `op-geth` on `node1` the following flags were ad
   - --metrics.influxdb.database=geth
 ```
 
-To allow Blockscout exlporer to collect data from `op-geth` on `node3` the following flags were updated to the appropriate `docker-compose.yml` file:
+To allow Blockscout explorer to collect data from `op-geth` on `node3` the following flags were updated to the appropriate `docker-compose.yml` file:
 ```
   - --http.api=debug,admin,db,eth,web3,net,personal,txpool,clique
   - --ws.api=debug,admin,db,eth,web3,net,personal,txpool
