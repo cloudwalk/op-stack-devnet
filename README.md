@@ -15,13 +15,15 @@ For alternative versions, please refer to the other branches and tags available 
 ## Available options
 1. [Running a single-node network without Docker](./single-node-no-docker.md): This option provides a fully autonomous startup.
 2. [Running a three-node network using Docker](./three-node-using-docker.md): This option requires specific files as outlined in option 1.
-3. [Enable Blobs (EIP-4844) For L2 Network](./run-EIP-4844-blobs.md): This option provides a description for configuration and enabling blobs for L2 network.
-4. [Architecture for monitoring](./architecture-for-monitoring.md): This option provides a description for installation and configuration block excplorer and metrics services (blockscout, prometheus, grafana, etc.).
-5. [Debug mode](./debug_mode.md): This option provides a description for installation and configuration block excplorer and metrics services (blockscout, prometheus, grafana, etc.).
+3. [Enable Blobs (EIP-4844) For L2 Network](./run-EIP-4844-blobs.md): Based on option 2 and provides a description for configuration and enabling blobs for L2 network. By default, the L2 network is running using common transaction data to store L2 information on L1.
+4. [Architecture for monitoring](./architecture-for-monitoring.md): Based on option 2 and provides a description for installation and configuration block Explorer and metrics services (Blockscout, Prometheus, Grafana, etc.).
+5. [Debug mode](./debug_mode.md): Based on option 2 and provides some debug tools for convenience during the development.
 
-## Urls
+## URLs
 
-### Single node without Docker
+The URLs that will be available after implementing an appropriate option mentioned in the previous section.
+
+### For option 1. The single L2 node network without Docker
 
 
 | URL                        | Software Name       |
@@ -29,7 +31,7 @@ For alternative versions, please refer to the other branches and tags available 
 | http://127.0.0.1:8545/     | L2 RPC endpoint     |
 
 
-### Three node network using Docker
+### For option 2. The three node network using Docker
 
 #### RPC URLs L2
 
@@ -39,37 +41,39 @@ For alternative versions, please refer to the other branches and tags available 
 | http://192.168.10.21:8545/ | http://127.0.0.1:8565/ | node2           |
 | http://192.168.10.31:8545/ | http://127.0.0.1:8575/ | node3           |
 
-#### RPC URLs L1, Prysm devnet (optional)
+### For option 3. Activating EIP-4844 blobs
 
-| URL private               | URL public             | name          |
+#### Prysm devnet RPC URLs L1
+
+| URL private               | URL public             | Description   |
 |---------------------------|------------------------|---------------|
 | http://192.168.10.2:3500/ | http://127.0.0.1:3500/ | Beacon RPC    |
 | http://192.168.10.3:8545/ | http://127.0.0.1:8555/ | Execution RPC |
 
-### Explorer service (Blockscout)
+### For option 4. Monitoring
 
-#### UI
+#### Blockscout explorer UI
 
-| URL private                | URL public             | Software Name     | Datasource node |
+| URL private                | URL public             | Software name     | Datasource node |
 |----------------------------|------------------------|-------------------|-----------------|
 | http://192.168.10.36:3000/ | http://127.0.0.1/      | Blockscout New UI | node3           |
 | http://192.168.10.35:4005/ | http://127.0.0.1:4005/ | Blockscout Old UI | node3           |
 
-#### DB
+#### Blockscout explorer DB
 
 ```bash
   postgresql://blockscout:ceWb1MeLBEeOIfk65gU8EjF8@db:5432/blockscout
 ```
 
-### Metric services
+#### Metrics services
 
-| URL private                | URL public             | Software Name |
+| URL private                | URL public             | Software name |
 |----------------------------|------------------------|---------------|
 | http://192.168.10.44:3003/ | http://127.0.0.1:3003/ | Grafana       |
 | http://192.168.10.45:9090/ | http://127.0.0.1:9090/ | Prometheus    |
 
-### Debug service
+### For option 5. Debug services
 
-| URL public             | Software Name |
+| URL public             | Software name |
 |------------------------|---------------|
 | http://127.0.0.1:8889/ | Dozzle        |

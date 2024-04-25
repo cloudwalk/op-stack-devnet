@@ -48,10 +48,11 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    3007
    ```
 
-5. Select the L1 network to use. It can be `Ethereum Mainnet`, `Polygon`, `Goerli`, or a locally
-   running [Ganache](https://trufflesuite.com/ganache/) or locally
-   running [Hardhat](https://hardhat.org/hardhat-network/docs/overview), or any other EVM-compatible network. You need
-   to know the following parameters of the chosen L1 network:
+5. Select the L1 network to use. It can be `Ethereum Mainnet`, `Polygon`, `Sepolia`, or
+   locally running [Ganache](https://trufflesuite.com/ganache/) or
+   locally running [Hardhat](https://hardhat.org/hardhat-network/docs/overview), or 
+   any other EVM-compatible network.
+   You need to know the following parameters of the chosen L1 network:
     * the RPC URL;
     * the chain ID (network ID).
 
@@ -87,8 +88,8 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    ```
 
 
-2. Fix a bug by replacing `blockHash.String()` => `"latest"` in the file `~/optimism/op-service/sources/eth_client.go`. There should
-   be 2 replacements in function `ReadStorageAt`.
+2. Fix a bug by replacing `blockHash.String()` => `"latest"` in the file `~/optimism/op-service/sources/eth_client.go`.
+   There should be 2 replacements in function `ReadStorageAt`.
 
 
 3. If you are using [nvm](https://github.com/nvm-sh/nvm) replace the NodeJs version in the `./.nvmrc` file with the
@@ -156,7 +157,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
 
 
 3. Fund the first three accounts (`Admin`, `Batcher`, `Proposer`) with some native tokens in your L1 network.
-   Recommended funding for Goerli:
+   Recommended funding for Sepolia:
    ```
    Admin — 2 ETH
    Proposer — 5 ETH
@@ -375,7 +376,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
       accounts in the future L2 network,
       including [Hardhat test accounts](https://hardhat.org/hardhat-network/docs/reference#initial-state).
     * `faultGameWithdrawalDelay` -- is the number of seconds that users must wait before withdrawing ETH from a fault game.
-    * `systemConfigStartBlock` -- represents the block at which the op-node should start syncing from. It is an override to set this value on legacy networks where it is not set by  default. It can be removed once all networks have this value set in their storage.
+    * `systemConfigStartBlock` -- represents the block at which the op-node should start syncing from. It is an override to set this value on legacy networks where it is not set by default. It can be removed once all networks have this value set in their storage.
     * `requiredProtocolVersion`, `recommendedProtocolVersion` -- indicates the protocol version that are required and recommended for nodes to adopt, to stay in sync with the network.
     * `useFaultProofs` -- is a flag that indicates if the system is using fault proofs instead of the older output oracle mechanism.
     * `proofMaturityDelaySeconds` -- is the number of seconds that a proof must be mature before it can be used to finalize a withdrawal.
@@ -389,11 +390,11 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
     * `faultGameGenesisOutputRoot` -- is the output root for the genesis block.
     * `preimageOracleMinProposalSize` is the minimum number of bytes that a large preimage oracle proposal can be.
     * `preimageOracleChallengePeriod` -- is the number of seconds that challengers have to challenge a large preimage proposal.
-    * `l2GenesisCanyonTimeOffset` -- is the number of seconds after genesis block that Canyon hard fork activates. **Set it to 0 to activate at genesis**. **Nil** to disable Canyon.
-    * `l2GenesisDeltaTimeOffset` -- is the number of seconds after genesis block that Delta hard fork activates. **Set it to 0 to activate at genesis**. **Nil** to disable Canyon.
-    * `l2GenesisEcotoneTimeOffset` -- is the number of seconds after genesis block that Ecotone hard fork activates. **Set it to 0 to activate at genesis**. **Nil** to disable Canyon.
+    * `l2GenesisCanyonTimeOffset` -- is the number of seconds after genesis block that Canyon hard fork activates. **Set it to 0 to activate at genesis**. **Nil** to disable Canyon. See a note below.
+    * `l2GenesisDeltaTimeOffset` -- is the number of seconds after genesis block that Delta hard fork activates. **Set it to 0 to activate at genesis**. **Nil** to disable Delta. See a note below.
+    * `l2GenesisEcotoneTimeOffset` -- is the number of seconds after genesis block that Ecotone hard fork activates. **Set it to 0 to activate at genesis**. **Nil** to disable Ecotone. See a note below.
 
-**NOTE** remove last 3 lines (`l2GenesisCanyonTimeOffset`, `l2GenesisDeltaTimeOffset`, `l2GenesisEcotoneTimeOffset`), to run single node locally without needed beacon node and ecoton. It should be used only if it is necessary to enable latest features (EIP-4844).
+**NOTE** remove last 3 lines (`l2GenesisCanyonTimeOffset`, `l2GenesisDeltaTimeOffset`, `l2GenesisEcotoneTimeOffset`), to run single node locally without needed a beacon node and Ecoton. It should be used only if it is necessary to enable the latest EIP-4844 blob feature. See details in the [Enable Blobs (EIP-4844) For L2 Network](run-EIP-4844-blobs.md) manual.
 
 ## Step 5. Deploy the Create2 Factory (Optional)
 
@@ -450,7 +451,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
 
    >  Issues:
    >  1. If you see a nondescript error that includes `EvmError: Revert` and `Script failed` then you likely need to change the `IMPL_SALT` environment variable. This variable determines the addresses of various smart contracts that are deployed via CREATE2. If the same IMPL_SALT is used to deploy the same contracts twice, the second deployment will fail. You can generate a new IMPL_SALT by running `direnv allow` anywhere in the Optimism Monorepo.
-   >  2. If you see another error logs, check if you ran `make cannon-prestate` from step `2.4`
+   >  2. If you see another error logs make sure you ran `make cannon-prestate` in step `2.1.4`.
 
 
 4. Retrieve the address of the newly deployed contracts `L2OutputOracleProxy` in the L1 network:
@@ -470,7 +471,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    export L2OOP_ADDRESS="0xc6e7DF5E7b4f2A278906862b61205850344D4e7d"
    ```
 
-2. Pull the environment variables into context using `direnv` (command should be run in any place in folder `~/optimism`):
+2. Pull the environment variables into context using `direnv` (the command should be run in any place in folder `~/optimism`):
    ``` bash
    direnv allow .
    ```
@@ -503,9 +504,9 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
 
 ## Step 8. Initialize L2
 
-1. If you skipped previous sections and obtained the configuration files (`genesis.json`, `rollup.json`, `op_env.sh`)
+1. If you skipped previous sections and obtained the configuration files (`genesis.json`, `rollup.json`, `jwt.txt`)
    from someone else:
-    * put files `genesis.json`, `rollup.json` into the `~/optimism/op-node/` directory;
+    * put files `genesis.json`, `rollup.json`, `jwt.txt` into the `~/optimism/op-node/` directory;
     * put file `op_env.sh` into your home directory.
 
 
@@ -563,7 +564,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    If you got an error stop the app and try to execute steps of section [7](#7-initialize-l2) again. Then run `op-geth`
    again.
 
-   `networkid` - should be your L2 network ID, `3007` in this case (as it is chosen in `~/optimism/packages/contracts-bedrock/deploy-config/local-op-devnet.json`).
+   The `networkid` parameters should be equal the previously selected L2 network ID. In our case, it is `3007` (as it is chosen in `~/optimism/packages/contracts-bedrock/deploy-config/local-op-devnet.json`).
 
 
 2. Open another terminal and run `op-node` from the appropriate directory:
