@@ -10,7 +10,7 @@ protect private keys of accounts that are used to create and run the L2 network 
 network. It is strongly recommended to use hardware keys or special services to generate and use private keys
 like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
 
-## Step 1. Prerequisites and notes
+## 1. Prerequisites and notes
 
 1. Ensure that the following software is installed on your local machine:
     * `curl`;
@@ -72,7 +72,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
 6. This instruction assumes that all the necessary repositories will be cloned to your home directory (`~/`). If this is
    not the case, please replace `~` with the path to the required directory.
 
-## Step 2. Clone, fix, and build repositories
+## 2. Clone, fix, and build repositories
 
 *Tip:* Subsections 2.1 and 2.2 below can be executed in parallel.
 
@@ -123,7 +123,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    make geth
    ```
 
-## Step 3. Generate accounts and fund them
+## 3. Generate accounts and fund them
 
 1. Chose a mnemonic and generate 4 accounts using it: `Admin`, `Batcher`, `Proposer`, `Sequencer`. This instruction uses
    the Hardhat [test mnemonic](https://hardhat.org/hardhat-network/docs/reference#initial-state):
@@ -166,7 +166,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    *Tip:* If you use Ganache with the settings provided in p.1.5, all the accounts are already funded at the Ganache
    startup.
 
-## Step 4. Configure the network
+## 4. Configure the network
 
 1. In the Optimism root directory, copy the environment file:
    ```bash
@@ -396,7 +396,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
 
 **NOTE** remove last 3 lines (`l2GenesisCanyonTimeOffset`, `l2GenesisDeltaTimeOffset`, `l2GenesisEcotoneTimeOffset`), to run single node locally without needed a beacon node and Ecoton. It should be used only if it is necessary to enable the latest EIP-4844 blob feature. See details in the [Enable Blobs (EIP-4844) For L2 Network](run-EIP-4844-blobs.md) manual.
 
-## Step 5. Deploy the Create2 Factory (Optional)
+## 5. Deploy the Create2 Factory (Optional)
 
 >   This step is typically only necessary if you are deploying your OP Stack chain to custom L1 chain. If you are deploying your OP Stack chain to Sepolia, you can safely skip this step.
 
@@ -425,7 +425,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    cast publish --rpc-url $L1_RPC_URL 0xf8a58085174876e800830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf31ba02222222222222222222222222222222222222222222222222222222222222222a02222222222222222222222222222222222222222222222222222222222222222
     ```
 
-## Step 6. Deploy the L1 contracts
+## 6. Deploy the L1 contracts
 
 1. Navigate to the `packages/contracts-bedrock` directory within the Optimism Monorepo:
    ```bash
@@ -451,7 +451,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
 
    >  Issues:
    >  1. If you see a nondescript error that includes `EvmError: Revert` and `Script failed` then you likely need to change the `IMPL_SALT` environment variable. This variable determines the addresses of various smart contracts that are deployed via CREATE2. If the same IMPL_SALT is used to deploy the same contracts twice, the second deployment will fail. You can generate a new IMPL_SALT by running `direnv allow` anywhere in the Optimism Monorepo.
-   >  2. If you see another error logs make sure you ran `make cannon-prestate` in step `2.1.4`.
+   >  2. If you see another error logs make sure you ran `make cannon-prestate` in section `2.1.4`.
 
 
 4. Retrieve the address of the newly deployed contracts `L2OutputOracleProxy` in the L1 network:
@@ -464,7 +464,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    "L2OutputOracleProxy": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
    ```
 
-## Step 7. Generate L2 configuration files
+## 7. Generate L2 configuration files
 
 1. Add `L2OutputOracleProxy` address in `~/optimism/.envrc` file:
    ```bash
@@ -502,12 +502,11 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    files (`jwt.txt`, `genesis.json`, `rollup.json`) to initialize and run your L2 network.
 
 
-## Step 8. Initialize L2
+## 8. Initialize L2
 
 1. If you skipped previous sections and obtained the configuration files (`genesis.json`, `rollup.json`, `jwt.txt`)
    from someone else:
     * put files `genesis.json`, `rollup.json`, `jwt.txt` into the `~/optimism/op-node/` directory;
-    * put file `op_env.sh` into your home directory.
 
 
 2. Head over to the op-node package:
@@ -531,7 +530,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    ./build/bin/geth init --datadir=datadir genesis.json
    ```
 
-## Step 9. Run and manage the L2 node software
+## 9. Run and manage the L2 node software
 
 1. Run `op-geth` from the appropriate directory:
    ```bash
@@ -628,7 +627,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
 
 6. To reinitialize the network stop it and repeat steps of section [7](#7-initialize-l2) again.
 
-## Step 9. Use the newly created L2 network
+## 9. Use the newly created L2 network
 
 1. The URL to access RPC API endpoint of the network is: `http://localhost:8545`.
 
@@ -647,4 +646,9 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
 
    Otherwise, to obtain some ETH in an L2 account, you will need to transfer the desired amount of ETH from that account
    to the `L1StandardBridgeProxy` contract within the L1 network and wait for the amount to appear in the L2 network.
-   You can find the contract's address in the `op_env.sh` file.
+   You can find the contract's address in deployed contract addresses.
+   
+   ```bash
+      cd ~/optimism/packages/contracts-bedrock 
+      cat deployments/local-op-devnet/.deploy | grep -E "(L1StandardBridgeProxy)"
+   ```

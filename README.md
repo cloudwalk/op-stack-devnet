@@ -16,8 +16,6 @@ For alternative versions, please refer to the other branches and tags available 
 1. [Running a single-node network without Docker](./single-node-no-docker.md): This option provides a fully autonomous startup.
 2. [Running a three-node network using Docker](./three-node-using-docker.md): This option requires specific files as outlined in option 1.
 3. [Enable Blobs (EIP-4844) For L2 Network](./run-EIP-4844-blobs.md): Based on option 2 and provides a description for configuration and enabling blobs for L2 network. By default, the L2 network is running using common transaction data to store L2 information on L1.
-4. [Architecture for monitoring](./architecture-for-monitoring.md): Based on option 2 and provides a description for installation and configuration block Explorer and metrics services (Blockscout, Prometheus, Grafana, etc.).
-5. [Debug mode](./debug_mode.md): Based on option 2 and provides some debug tools for convenience during the development.
 
 ## URLs
 
@@ -41,17 +39,6 @@ The URLs that will be available after implementing an appropriate option mention
 | http://192.168.10.21:8545/ | http://127.0.0.1:8565/ | node2           |
 | http://192.168.10.31:8545/ | http://127.0.0.1:8575/ | node3           |
 
-### For option 3. Activating EIP-4844 blobs
-
-#### Prysm devnet RPC URLs L1
-
-| URL private               | URL public             | Description   |
-|---------------------------|------------------------|---------------|
-| http://192.168.10.2:3500/ | http://127.0.0.1:3500/ | Beacon RPC    |
-| http://192.168.10.3:8545/ | http://127.0.0.1:8555/ | Execution RPC |
-
-### For option 4. Monitoring
-
 #### Blockscout explorer UI
 
 | URL private                | URL public             | Software name     | Datasource node |
@@ -72,8 +59,18 @@ The URLs that will be available after implementing an appropriate option mention
 | http://192.168.10.44:3003/ | http://127.0.0.1:3003/ | Grafana       |
 | http://192.168.10.45:9090/ | http://127.0.0.1:9090/ | Prometheus    |
 
-### For option 5. Debug services
+### Debug services
 
 | URL public             | Software name |
 |------------------------|---------------|
 | http://127.0.0.1:8889/ | Dozzle        |
+
+
+### For option 3. Activating EIP-4844 blobs
+
+#### Prysm devnet RPC URLs L1
+
+| URL private               | URL public             | Description   |
+|---------------------------|------------------------|---------------|
+| http://192.168.10.2:3500/ | http://127.0.0.1:3500/ | Beacon RPC    |
+| http://192.168.10.3:8545/ | http://127.0.0.1:8555/ | Execution RPC |

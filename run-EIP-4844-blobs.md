@@ -3,7 +3,7 @@
 Ganache is not fit for blob transactions yet. You need to run other local L1 network that supports `EIP-4844` and can provide `Beacon node RPC`.
 For development [Prysm devnet](https://docs.prylabs.network/docs/getting-started) can be used. The original Prysm devnet manual is available [here](https://docs.prylabs.network/docs/advanced/proof-of-stake-devnet).
 
-## Step 1. Prerequisites
+## 1. Prerequisites
 
 1. Generate configuration files `genesis.json`, `rollup.json` as described in [Running a single-node manual](./single-node-no-docker.md#1-prerequisites).
 
@@ -13,7 +13,7 @@ For development [Prysm devnet](https://docs.prylabs.network/docs/getting-started
     git clone https://github.com/Offchainlabs/eth-pos-devnet && cd eth-pos-devnet
 ```
 
-## Step 2. Configure and run L1 network
+## 2. Configure and run L1 network
 
 1. Update the `consensus/config.yml` file. 
 
@@ -128,9 +128,9 @@ Update `beacon-chain` ports to be accessible from L2 network:
     * Beacon node RPC: http://192.168.10.2:3500
     * L1 RPC: http://192.168.10.3:8545
 
-## Step 3. Configure and run L2 network
+## 3. Configure and run L2 network
 
-1. Use the [Running a three-node network using Docker](./three-node-using-docker.md) manual to configure L2 network, following sections from **Step 1** to **Step 3**.
+1. Use the [Running a three-node network using Docker](./three-node-using-docker.md) manual to configure L2 network, following sections from **1** to **3**.
 
 2. Update `CW_OP_L1_BEACON_URL` variable in file `<l2-devnet-dir>/docker/prerequisite/envfile` to L1 Beacon node RPC url:
 
@@ -186,10 +186,10 @@ Update `beacon-chain` ports to be accessible from L2 network:
 
 5. Run L2 network:
 
-Use the [Running a three-node network using Docker](./three-node-using-docker.md) manual to run the L2 network, following sections from **Step 4** to the end.
+Use the [Running a three-node network using Docker](./three-node-using-docker.md) manual to run the L2 network, following sections from **4** to the end.
 
 
-## Step 3. Enable Blobs (EIP-4844) For L2 Network
+## 3. Enable Blobs (EIP-4844) For L2 Network
 
 To enable blobs for L2 it is necessary to do some additional steps, because the L2 network is not supporting blobs by default. Original manuals:
     - [Prepare nodes for blobs](https://docs.optimism.io/builders/node-operators/management/blobs)
