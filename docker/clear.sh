@@ -15,3 +15,4 @@ sudo rm -fr ./node-03/datadir/
 sudo rm -fr ./node-03/p2p/
 
 sudo rm -fr ./metrics/data
+sudo rm -fr ./explorer/data
