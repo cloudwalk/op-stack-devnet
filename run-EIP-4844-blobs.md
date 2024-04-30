@@ -283,5 +283,5 @@ Where:
     cd docker/node-01-main
     sudo docker compose --env-file ../prerequisite/envfile stop node1-op-batcher
     sudo docker compose --env-file ../prerequisite/envfile down node1-op-batcher
-    sudo docker compose --env-file ../prerequisite/envfile up node1-op-batcher -d
+    sudo docker compose --env-file ../prerequisite/envfile up -d node1-op-batcher
 ```
