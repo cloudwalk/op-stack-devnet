@@ -91,15 +91,16 @@ This instruction is actual for the following versions of OP-Stack repositories:
     ```bash
     #!/bin/bash
     # Main parameters
-    export CW_OP_SEQUENCER_KEY="7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6"
+    export CW_OP_SEQUENCER_KEY="0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6"
     export CW_OP_SEQUENCER_ADDRESS="0x90F79bf6EB2c4f870365E785982E1f101E93b906"
-    export CW_OP_L1_RPC_URL="http://dockerhost:8333"
-    export CW_OP_L1_RPC_KIND="basic" # Available options are: alchemy, quicknode, parity, nethermind, debug_geth, erigon, basic, and any
-    export CW_OP_BATCHER_KEY="5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a"
-    export CW_OP_PROPOSER_KEY="59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"
-    export CW_OP_L2OOP_ADDRESS="0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9" # Address of the "L2OutputOracleProxy" contract on L1
+    export CW_OP_L1_RPC_URL="http://localhost:8333"
+    export CW_OP_L1_RPC_KIND="any" # Available options are: alchemy, quicknode, parity, nethermind, debug_geth, erigon, basic, and any
+    export CW_OP_BATCHER_KEY="0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"
+    export CW_OP_PROPOSER_KEY="0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a"
+    export CW_OP_L2OOP_ADDRESS="0x6b39b761b1b64C8C095BF0e3Bb0c6a74705b4788" # Address of the "L2OutputOracleProxy" contract on L1
     export CW_OP_CONFIG_NAME="local-op-devnet"
     export CW_OP_L2_NETWORK_ID=3007
+    export CW_OP_L1_BEACON_URL="https://ethereum-sepolia-beacon-api.publicnode.com"
     
     # P2P parameters
     export CW_OP_P2P_PRIVATE_KEY_NODE1="d01aba27820aeeb60ead4aed481eb30107426c18fd2e3133f1abac8fcd570d01"
@@ -112,9 +113,32 @@ This instruction is actual for the following versions of OP-Stack repositories:
     # Docker images for node apps
     export CW_OP_IMAGE_OP_STACK="philpher/optimism:v1.7.2"
     export CW_OP_IMAGE_OP_GETH="philpher/op-geth:v1.101308.2"
+
+    export CW_BLOCKSCOUT_IMAGE_BACKEND="blockscout/blockscout-optimism:6.3.0"
+    export CW_BLOCKSCOUT_IMAGE_FRONTEND="ghcr.io/blockscout/frontend:latest"
+    export CW_BLOCKSCOUT_IMAGE_POSTGRES="postgres:15"
+    export CW_BLOCKSCOUT_IMAGE_NGINX="nginx"
+    export CW_BLOCKSCOUT_IMAGE_REDIS="redis:alpine"
+    export CW_BLOCKSCOUT_IMAGE_SIG_PROVIDER="ghcr.io/blockscout/sig-provider:latest"
+    export CW_BLOCKSCOUT_IMAGE_SC_VERIFIER="ghcr.io/blockscout/smart-contract-verifier:latest"
+    export CW_BLOCKSCOUT_IMAGE_STATS="ghcr.io/blockscout/stats:latest"
+    export CW_BLOCKSCOUT_IMAGE_VISUALIZER="ghcr.io/blockscout/visualizer:latest"
+
+    export CW_GRAFANA_IMAGE_GRAFANA="grafana/grafana:10.1.2"
+    export CW_GRAFANA_IMAGE_INFLUXDB="influxdb:1.8.10"
+    export CW_GRAFANA_IMAGE_TELEGRAF="telegraf:alpine"
+    export CW_GRAFANA_IMAGE_KAPACITOR="kapacitor:alpine"
+    export CW_GRAFANA_IMAGE_CHRONOGRAF="chronograf:1.8.10-alpine"
+ 
+    export CW_PROMETHEUS_IMAGE="prom/prometheus:latest"
+   
+    export CW_OP_TELEGRAF_DOCKER_ID=
     ```
 
-    *Tip:* If your use the L1 network running locally on your machine do not forget to replace the `CW_OP_L1_RPC_URL` env variable from `localhost` to `dockerhost`. Otherwise, Docker containers will not be able to access you machine.
+    *Tips:*
+    * a. Consider the values in the `Main parameters` sections, other parameters most likely should be leave unchanged.
+    * b. If your use the L1 network running locally on your machine do not forget to replace the `CW_OP_L1_RPC_URL` env variable from `localhost` to `dockerhost`. Otherwise, Docker containers will not be able to access you machine.
+    * c. For the `CW_OP_TELEGRAF_DOCKER_ID` env variable see the section about the monitoring software below.
 
 
 ## 4. Run and manage containers
