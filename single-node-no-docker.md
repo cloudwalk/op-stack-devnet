@@ -560,7 +560,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
       --rollup.disabletxpoolgossip=true
     ```
 
-   If you got an error stop the app and try to execute steps of section [7](#7-initialize-l2) again. Then run `op-geth`
+   If you got an error stop the app and try to execute steps of section [7](#7-generate-l2-configuration-files) again. Then run `op-geth`
    again.
 
    The `networkid` parameters should be equal the previously selected L2 network ID. In our case, it is `3007` (as it is chosen in `~/optimism/packages/contracts-bedrock/deploy-config/local-op-devnet.json`).
@@ -625,7 +625,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
 5. To stop the network just terminate the applications run previously.
 
 
-6. To reinitialize the network stop it and repeat steps of section [7](#7-initialize-l2) again.
+6. To reinitialize the network stop it and repeat steps of section [7](#7-generate-l2-configuration-files) again.
 
 ## 9. Use the newly created L2 network
 
