@@ -275,31 +275,48 @@ This docker installation includes also software for:
 **Note:** All metric software docker-compose configuration files are stored in folder [docker/metrics](docker/metrics).
 All explorer software docker-compose configuration files are stored in folder [docker/explorer](docker/explorer).
 
-### 6.2. Enabling the block explorer
+### 6.2. Metrics Datasources
+
+`Op-geth` can provide two type of metrics sources:
+* `op-geth` sends metrics directly to `influxDB`. In this case `op-geth` is responsible for saving data in `influxDB`.
+* `op-geth` enables and provides http server with metrics for `prometheus`. In this case prometheus is responsible for checking the `op-geth` metrics URL and saving data. Therefore, additional requests from `prometheus` can create extra load on the server.
+
+Because sequencer is enabled on `node1`, to have more correct metrics data `influxDB` was enabled on `node1`.
+To avoid extra load on sequencer node, `prometheus` service and the `op-geth` metrics server were enable on `node3`.
+
+### 6.3. Enabling the block explorer
 
 No changes in configuration of nodes is needed. The explorer requests blocks and additional information from `op-geth` on `node3` through the JSON RPC.
 
-### 6.3. Enabling metrics
+To allow Blockscout explorer to collect data from `op-geth` on `node3` the following flags were updated to the appropriate `docker-compose.yml` file:
+```
+  --http.api=debug,admin,db,eth,web3,net,personal,txpool,clique
+  --ws.api=debug,admin,db,eth,web3,net,personal,txpool
+```
+
+### 6.4. Enabling metrics
 
 `op-geth` allows to collect data in `InfluxDB` and `Prometheus`.
 
-To allow metrics collection for `op-geth` on `node1` the following flags were added to the appropriate `docker-compose.yml` file:
+To allow `InfluxDB` metrics collection for `op-geth` on `node1` the following flags were added to the appropriate `docker-compose.yml` file:
+
+```
+  - --metrics
+  - --metrics.expensive
+  - --metrics.influxdb
+  - --metrics.influxdb.endpoint=http://192.168.10.15:8086 #influxdb container IP
+  - --metrics.influxdb.username=geth
+  - --metrics.influxdb.password=geth
+  - --metrics.influxdb.database=geth
+  - --metrics.addr=192.168.10.11
+```
+
+To allow `Prometheus` metrics collection for `op-geth` on `node3` the following flags were added to the appropriate `docker-compose.yml` file:
 
 ```
   - --metrics
   - --metrics.addr=192.168.10.31
   - --metrics.expensive
-  - --metrics.influxdb
-  - --metrics.influxdb.endpoint=http://192.168.10.15:8086
-  - --metrics.influxdb.username=geth
-  - --metrics.influxdb.password=geth
-  - --metrics.influxdb.database=geth
-```
-
-To allow Blockscout explorer to collect data from `op-geth` on `node3` the following flags were updated to the appropriate `docker-compose.yml` file:
-```
-  - --http.api=debug,admin,db,eth,web3,net,personal,txpool,clique
-  - --ws.api=debug,admin,db,eth,web3,net,personal,txpool
 ```
 
 To allow metrics collection for `op-node` on `node3` and  `op-batcher`, `op-proposer` on `node1` the following flag were added to the appropriate `docker-compose.yml` files:
@@ -307,7 +324,7 @@ To allow metrics collection for `op-node` on `node3` and  `op-batcher`, `op-prop
 - --metrics.enabled
 ```
 
-### 6.4. Telegraf activation
+### 6.5. Telegraf activation
 
 Before running docker, it is necessary to send docker group id (GID) to telegraf container in env variable `CW_OP_TELEGRAF_DOCKER_ID`:
 
@@ -319,15 +336,15 @@ Before running docker, it is necessary to send docker group id (GID) to telegraf
 
 2. Set the outputted number to variable `CW_OP_TELEGRAF_DOCKER_ID` in file `docker/prerequisite/envfile`
 
-### 6.5. InfluxDB activation
+### 6.6. InfluxDB activation
 
 During the first run of docker with metrics software it is necessary to create database and user for `op-geth`. To do it, run script:
 
-```
+```bash
 sudo scripts/influxdb.sh 
 ```
 
-### 6.6. Explorer services URLs
+### 6.7. Explorer services URLs
 
 | URL                        | Software name       | Datasource node |
 |----------------------------|---------------------|-----------------|
@@ -335,7 +352,7 @@ sudo scripts/influxdb.sh
 | http://192.168.10.36:3000/ | Blockscout (new UI) | node3           |
 
 
-### 6.7. Metric services URLs
+### 6.8. Metric services URLs
 
 | URL                        | Software name |
 |----------------------------|---------------|
@@ -343,7 +360,7 @@ sudo scripts/influxdb.sh
 | http://192.168.10.45:9090/ | Prometheus    |
 | http://192.168.10.44:3003/ | Grafana       |
 
-### 6.8. Prometheus Metrics URLs
+### 6.9. Prometheus Metrics URLs
 
 | URL                                                | Application name | Datasource node |
 |----------------------------------------------------|------------------|-----------------|
@@ -351,15 +368,6 @@ sudo scripts/influxdb.sh
 | http://192.168.10.32:7300/metrics                  | op-node          | node3           |
 | http://192.168.10.14:7300/metrics                  | op-proposer      | node1           |
 | http://192.168.10.13:7300/metrics                  | op-batcher       | node1           |
-
-### 6.9. Metrics Datasources
-
-`Op-geth` can provide two type of metrics sources:
-* `op-geth` sends metrics directly to `influxDB`. In this case `op-geth` is responsible for saving data in `influxDB`.
-* `op-geth` enables and provides http server with metrics for `prometheus`. In this case prometheus is responsible for checking the `op-geth` metrics URL and saving data. Therefore, additional requests from `prometheus` can create extra load on the server.
-
-Because sequencer is enabled on `node1`, to have more correct metrics data `influxDB` was enabled on `node1`.
-To avoid extra load on sequencer node, `prometheus` service and the `op-geth` metrics server were enable on `node3`.
 
 ### 6.10. Grafana Configuration
 
