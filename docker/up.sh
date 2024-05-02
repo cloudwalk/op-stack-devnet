@@ -18,3 +18,19 @@ cd ../node-03
 pwd
 echo "Up node 3:"
 sudo ./up.sh
+
+cd ../metrics
+pwd
+echo "Up metrics:"
+sudo ./up.sh
+
+cd ../explorer
+pwd
+echo "Up explorer (blockscout):"
+sudo ./up.sh
+
+if [ ${1:--default} == "--debug" ]
+  then
+    cd ../debug
+    sudo ./up.sh
+fi

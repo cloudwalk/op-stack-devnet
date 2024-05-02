@@ -2,10 +2,10 @@ version: '3.9'
 
 services:
   smart-contract-verifier:
-    image: ghcr.io/blockscout/smart-contract-verifier:${SMART_CONTRACT_VERIFIER_DOCKER_TAG:-latest}
+    image: ${CW_BLOCKSCOUT_IMAGE_SC_VERIFIER}
     pull_policy: always
     platform: linux/amd64
-    restart: always
+    restart: on-failure
     container_name: 'smart-contract-verifier'
     env_file:
       -  ../envs/common-smart-contract-verifier.env

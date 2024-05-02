@@ -7,7 +7,8 @@ services:
       - "8566:8546" # WebSocket
     extra_hosts: # for  Linux hosts since version 20.10
       - dockerhost:host-gateway
-    image: $CW_OP_IMAGE_OP_GETH
+    #    image: myimage
+    image: ${CW_OP_IMAGE_OP_GETH}
     volumes:
       - ./datadir:/datadir
       - ./credentials:/credentials
@@ -45,11 +46,10 @@ services:
       - "8567:8547" # Rollup RPC, to execute special commands of the node
     extra_hosts: # for  Linux hosts since version 20.10
       - dockerhost:host-gateway
-    image: $CW_OP_IMAGE_OP_NODE
-    links:
-      - node2-op-geth
+    image: ${CW_OP_IMAGE_OP_STACK}
     depends_on:
-      - node2-op-geth
+      node2-op-geth:
+        condition: service_started
     volumes:
       - ./credentials:/credentials
       - ./p2p:/p2p
@@ -60,7 +60,7 @@ services:
       - --rollup.config=/credentials/rollup.json
       - --rpc.addr=0.0.0.0
       - --rpc.port=8547
-      - --p2p.static=/ip4/192.168.10.12/tcp/9003/p2p/$CW_OP_P2P_ID_NODE1,/ip4/192.168.10.22/tcp/9003/p2p/$CW_OP_P2P_ID_NODE3
+      - --p2p.static=/ip4/192.168.10.12/tcp/9003/p2p/$CW_OP_P2P_ID_NODE1,/ip4/192.168.10.32/tcp/9003/p2p/$CW_OP_P2P_ID_NODE3
       - --p2p.listen.ip=0.0.0.0
       - --p2p.listen.tcp=9003
       - --p2p.listen.udp=9003
@@ -69,6 +69,7 @@ services:
       - --p2p.discovery.path=/p2p/opnode_discovery_db
       - --l1=$CW_OP_L1_RPC_URL
       - --l1.rpckind=$CW_OP_L1_RPC_KIND
+      - --l1.beacon=$CW_OP_L1_BEACON_URL
     networks:
       op-local:
         ipv4_address: 192.168.10.22
@@ -77,4 +78,3 @@ networks:
   op-local:
     name: op-local
     external: true
-

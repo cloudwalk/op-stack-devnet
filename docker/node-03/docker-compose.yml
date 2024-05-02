@@ -7,7 +7,7 @@ services:
       - "8576:8546" # WebSocket
     extra_hosts: # for  Linux hosts since version 20.10
       - dockerhost:host-gateway
-    image: $CW_OP_IMAGE_OP_GETH
+    image: ${CW_OP_IMAGE_OP_GETH}
     volumes:
       - ./datadir:/datadir
       - ./credentials:/credentials
@@ -36,7 +36,6 @@ services:
       - --authrpc.jwtsecret=/credentials/jwt.txt
       - --rollup.disabletxpoolgossip=true
       - --rollup.sequencerhttp=http://192.168.10.11:8545
-      - --verbosity=5
       - --metrics
       - --metrics.addr=192.168.10.31
       - --metrics.expensive
@@ -50,11 +49,10 @@ services:
       - "8577:8547" # Rollup RPC, to execute special commands of the node
     extra_hosts: # for  Linux hosts since version 20.10
       - dockerhost:host-gateway
-    image: $CW_OP_IMAGE_OP_NODE
-    links:
-      - node3-op-geth
+    image: ${CW_OP_IMAGE_OP_STACK}
     depends_on:
-      - node3-op-geth
+      node3-op-geth:
+        condition: service_started
     volumes:
       - ./credentials:/credentials
       - ./p2p:/p2p
@@ -75,141 +73,12 @@ services:
       - --l1=$CW_OP_L1_RPC_URL
       - --l1.rpckind=$CW_OP_L1_RPC_KIND
       - --metrics.enabled
+      - --l1.beacon=$CW_OP_L1_BEACON_URL
     networks:
       op-local:
         ipv4_address: 192.168.10.32
-
-  #Blockscout begin
-  redis_db:
-    extends:
-      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
-      service: redis_db
-    networks:
-      op-local:
-        ipv4_address: 192.168.10.33
-
-  postgres-db-init:
-    extends:
-      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
-      service: postgres-db-init
-
-  postgres-db:
-    extends:
-      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
-      service: postgres-db
-    networks:
-      op-local:
-        ipv4_address: 192.168.10.34
-
-  backend:
-    extends:
-      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
-      service: backend
-    ports:
-      - 4001:4000
-    networks:
-      op-local:
-        ipv4_address: 192.168.10.35
-
-  frontend:
-    extends:
-      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
-      service: frontend
-    ports:
-      - 3008:3000
-    networks:
-      op-local:
-        ipv4_address: 192.168.10.36
-
-  visualizer:
-    extends:
-      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
-      service: visualizer
-    networks:
-      op-local:
-        ipv4_address: 192.168.10.38
-
-  sig-provider:
-    extends:
-      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
-      service: sig-provider
-    networks:
-      op-local:
-        ipv4_address: 192.168.10.39
-
-  stats-db-init:
-    extends:
-      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
-      service: stats-db-init
-
-  stats-db:
-    depends_on:
-      - backend
-    extends:
-      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
-      service: stats-db
-    networks:
-      op-local:
-        ipv4_address: 192.168.10.41
-
-  stats:
-    depends_on:
-      - stats-db
-    extends:
-      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
-      service: stats
-    networks:
-      op-local:
-        ipv4_address: 192.168.10.42
-
-  proxy:
-    depends_on:
-      - backend
-      - frontend
-      - stats
-    extends:
-      file: ../metrics/blockscout/docker-compose-no-build-geth.yml
-      service: proxy
-    ports:
-      - 4000:80
-      - 8080:8080
-      - 8081:8081
-    networks:
-      op-local:
-        ipv4_address: 192.168.10.43
-#  blockscout end
-
-  #grafana begin
-  grafana:
-    extends:
-      file: ../metrics/grafana/grafana/docker-compose-grafana.yml
-      service: grafana
-    networks:
-      op-local:
-        ipv4_address: 192.168.10.44
-  #grafana end
-
-  #prometheus begin
-  prometheus:
-    extends:
-      file: ../metrics/grafana/prometheus/docker-compose-prometheus.yml
-      service: prometheus
-    networks:
-      op-local:
-        ipv4_address: 192.168.10.45
-#prometheus end
-
 networks:
   op-local:
     name: op-local
     external: true
     driver: bridge
-#    driver_opts:
-#      com.docker.network.driver.mtu: 5000
-volumes:
-  grafana-data:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: '../metrics/data/grafana/data'
