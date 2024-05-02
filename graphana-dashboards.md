@@ -20,7 +20,7 @@
 2. Click `Add new data source`.
 3. Choose `Prometheus`.
 4. Set URL: http://192.168.10.45:9090 .
-6. Click `Save & test`.
+5. Click `Save & test`.
 
 
 ## 3. Adding General InfluxDB and Prometheus dashboards

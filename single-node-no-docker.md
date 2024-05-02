@@ -92,7 +92,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    There should be 2 replacements in function `ReadStorageAt`.
 
 
-3. If you are using [nvm](https://github.com/nvm-sh/nvm) replace the NodeJs version in the `./.nvmrc` file with the
+3. If you are using [nvm](https://github.com/nvm-sh/nvm) replace the NodeJS version in the `./.nvmrc` file with the
    version you are currently using:
    ```bash
    echo "v20.11.0" > ./.nvmrc
@@ -408,7 +408,7 @@ like [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/).
    cast codesize 0x4e59b44847b379578588920cA78FbF26c0B4956C --rpc-url $L1_RPC_URL
    ```
 
-   If the command returns `0` then the contract has not been deployed yet. If the command returns `69` then the contract has been deployed and you can safely skip this section.
+   If the command returns `0` then the contract has not been deployed yet. If the command returns `69` then the contract has been deployed, and you can safely skip this section.
 
 
 2. Fund the factory deployer
